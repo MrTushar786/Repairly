@@ -344,9 +344,7 @@ export default function BookingWidget() {
                                                 appointment_date: date,
                                                 appointment_time: time,
                                                 customer_name: name,
-                                                customer_phone: phone,
                                                 customer_email: email,
-                                                user_id: user?.id, // Optional: Link to user if logged in
                                                 created_at: new Date()
                                             }]);
 
