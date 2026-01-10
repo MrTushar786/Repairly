@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { SHOP_DATA, SERVICES, DEVICE_MODELS } from '../data';
+import { SHOP_DATA, SERVICES, DEVICE_MODELS as STATIC_MODELS } from '../data';
 import { Smartphone, Laptop, Gamepad2, Tablet, MapPin, ChevronRight, Search, CheckCircle2, ShieldCheck, Clock, BadgeDollarSign, Star, Menu, X, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { getDeviceImageUrl } from '../lib/utils';
+import { supabase } from '../supabase';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -13,6 +14,27 @@ export default function Home() {
     const [selectedModel, setSelectedModel] = useState({});
     const [searchResults, setSearchResults] = useState([]);
     const [modelImageError, setModelImageError] = useState(false);
+    const [deviceModels, setDeviceModels] = useState(STATIC_MODELS);
+
+    // Fetch Dynamic Models
+    React.useEffect(() => {
+        const fetchModels = async () => {
+            const { data: modelData } = await supabase.from('device_models').select('*');
+            if (modelData && modelData.length > 0) {
+                const merged = structuredClone(STATIC_MODELS);
+                modelData.forEach(m => {
+                    const { category, brand, model } = m;
+                    if (!merged[category]) merged[category] = {};
+                    if (!merged[category][brand]) merged[category][brand] = [];
+                    if (!merged[category][brand].includes(model)) {
+                        merged[category][brand].push(model);
+                    }
+                });
+                setDeviceModels(merged);
+            }
+        };
+        fetchModels();
+    }, []);
 
     // Reset error when model changes
     React.useEffect(() => {
@@ -58,7 +80,7 @@ export default function Home() {
                                     onChange={(e) => {
                                         const query = e.target.value.toLowerCase();
                                         if (query.length > 1) {
-                                            const allModels = Object.values(DEVICE_MODELS).flatMap(cat => Object.values(cat).flat());
+                                            const allModels = Object.values(deviceModels).flatMap(cat => Object.values(cat).flat());
                                             const matched = allModels.filter(m => m.toLowerCase().includes(query)).slice(0, 5);
                                             setSearchResults(matched);
                                         } else {
@@ -202,11 +224,11 @@ export default function Home() {
                         </div>
 
                         {/* Brand Selection (Dynamic for ALL types) */}
-                        {selectedType && DEVICE_MODELS[selectedType] && (
+                        {selectedType && deviceModels[selectedType] && (
                             <div className="mb-4 animate-in fade-in slide-in-from-top-2">
                                 <label className="block text-xs font-bold text-slate-400 uppercase mb-2">Select {selectedType} Brand</label>
                                 <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                                    {Object.keys(DEVICE_MODELS[selectedType]).map(brand => (
+                                    {Object.keys(deviceModels[selectedType]).map(brand => (
                                         <button
                                             key={brand}
                                             onClick={() => setSelectedModel({ brand: brand, model: '' })}
@@ -233,8 +255,8 @@ export default function Home() {
                                             'Select Model...'}
                                 </option>
 
-                                {selectedType && selectedModel.brand && DEVICE_MODELS[selectedType][selectedModel.brand] ? (
-                                    DEVICE_MODELS[selectedType][selectedModel.brand].map(m => (
+                                {selectedType && selectedModel.brand && deviceModels[selectedType][selectedModel.brand] ? (
+                                    deviceModels[selectedType][selectedModel.brand].map(m => (
                                         <option key={m} value={m}>{m}</option>
                                     ))
                                 ) : null}

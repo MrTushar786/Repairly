@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Calendar, ChevronRight, Smartphone, Check, ArrowLeft, Laptop, Tablet, Gamepad2, Wrench, Battery, Droplets, Usb, Disc, Cpu, Wifi, Camera, Speaker, User } from 'lucide-react';
-import { DEVICE_MODELS } from '../data';
+import { DEVICE_MODELS as STATIC_MODELS } from '../data';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
 
@@ -21,6 +21,9 @@ export default function BookingWidget() {
     const [services, setServices] = useState([]);
     const [loadingServices, setLoadingServices] = useState(true);
 
+    // Dynamic Models
+    const [deviceModels, setDeviceModels] = useState(STATIC_MODELS);
+
     // State
     const [repairType, setRepairType] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -33,7 +36,7 @@ export default function BookingWidget() {
     const [email, setEmail] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Get Auth User & Pre-fill & Fetch Services
+    // Get Auth User & Pre-fill & Fetch Services & Models
     useEffect(() => {
         const init = async () => {
             // 1. Check User
@@ -51,6 +54,22 @@ export default function BookingWidget() {
                 setServices(serviceData);
             }
             setLoadingServices(false);
+
+            // 3. Fetch Models
+            const { data: modelData } = await supabase.from('device_models').select('*');
+            if (modelData && modelData.length > 0) {
+                const merged = structuredClone(STATIC_MODELS);
+                modelData.forEach(m => {
+                    const { category, brand, model } = m;
+                    if (!merged[category]) merged[category] = {};
+                    if (!merged[category][brand]) merged[category][brand] = [];
+                    // Avoid duplicates
+                    if (!merged[category][brand].includes(model)) {
+                        merged[category][brand].push(model);
+                    }
+                });
+                setDeviceModels(merged);
+            }
         };
         init();
     }, []);
@@ -59,7 +78,7 @@ export default function BookingWidget() {
     useEffect(() => {
         if (initialModel) {
             // Reverse lookup model to find Category and Brand
-            for (const [cat, brands] of Object.entries(DEVICE_MODELS)) {
+            for (const [cat, brands] of Object.entries(deviceModels)) {
                 for (const [brand, models] of Object.entries(brands)) {
                     if (models.includes(initialModel)) {
                         setSelectedCategory(cat);
@@ -71,7 +90,7 @@ export default function BookingWidget() {
                 }
             }
         }
-    }, [initialModel]);
+    }, [initialModel, deviceModels]);
 
     const steps = [
         { num: 1, label: 'Service' },
@@ -201,7 +220,7 @@ export default function BookingWidget() {
                         <div>
                             <label className="text-xs font-bold text-slate-400 mb-2 block">Category</label>
                             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                                {Object.keys(DEVICE_MODELS).map(cat => (
+                                {Object.keys(deviceModels).map(cat => (
                                     <button
                                         key={cat}
                                         onClick={() => { setSelectedCategory(cat); setSelectedBrand(''); setSelectedModel(''); }}
@@ -220,7 +239,7 @@ export default function BookingWidget() {
                             <div className="animate-in fade-in slide-in-from-top-2">
                                 <label className="text-xs font-bold text-slate-400 mb-2 block">Brand</label>
                                 <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                                    {Object.keys(DEVICE_MODELS[selectedCategory]).map(brand => (
+                                    {Object.keys(deviceModels[selectedCategory]).map(brand => (
                                         <button
                                             key={brand}
                                             onClick={() => { setSelectedBrand(brand); setSelectedModel(''); }}
@@ -246,7 +265,7 @@ export default function BookingWidget() {
                                     disabled={!selectedBrand}
                                 >
                                     <option value="">{selectedBrand ? 'Select Model...' : 'Select Brand First'}</option>
-                                    {selectedCategory && selectedBrand && DEVICE_MODELS[selectedCategory][selectedBrand].map(m => (
+                                    {selectedCategory && selectedBrand && deviceModels[selectedCategory] && deviceModels[selectedCategory][selectedBrand] && deviceModels[selectedCategory][selectedBrand].map(m => (
                                         <option key={m} value={m}>{m}</option>
                                     ))}
                                 </select>
