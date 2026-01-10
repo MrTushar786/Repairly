@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #0047BA;
+    --color-primary-light: #E6F0FF;
+    --color-primary-hover: #003082;
+    --color-secondary: #0F172A;
+    --color-accent: #FF5A1F;
+    --color-bg-body: #FFFFFF;
+    --color-bg-input: #FFFFFF;
+    --color-text-main: #1E293B;
+    --color-text-muted: #64748B;
+
+    --shadow-soft: 0 4px 6px -1px rgba(0, 71, 186, 0.1), 0 2px 4px -1px rgba(0, 71, 186, 0.06);
+    --shadow-card: 0 10px 15px -3px rgba(15, 23, 42, 0.05), 0 4px 6px -2px rgba(15, 23, 42, 0.025);
+    --shadow-float: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+@layer base {
+    body {
+        @apply bg-bg-body text-text-main antialiased selection:bg-primary selection:text-white;
+    }
+}
+
+@keyframes scan {
+    0% {
+        top: 0%;
+        opacity: 0;
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    85% {
+        opacity: 1;
+    }
+
+    100% {
+        top: 100%;
+        opacity: 0;
+    }
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-10deg);
+    }
+
+    75% {
+        transform: rotate(10deg);
+    }
+}
+
+/* Emergency Mode Overrides */
+/* When .emergency-active class is on html/body, re-map the variables */
+.emergency-active {
+    --color-primary: #DC2626 !important;
+    /* Red-600 */
+    --color-primary-light: #FEF2F2 !important;
+    /* Red-50 */
+    --color-primary-hover: #B91C1C !important;
+    --color-secondary: #000000 !important;
+    --color-accent: #FFFFFF !important;
+    /* White accent */
+    --color-bg-body: #111111 !important;
+    /* Dark Grey BG */
+    --color-text-main: #FFFFFF !important;
+    --color-text-muted: #D1D5DB !important;
+}
+
+/* Specific emergency fixes since Tailwind generates utility classes based on the theme vars */
+/* We need to ensure text contrasts work */
+.emergency-active .text-secondary {
+    color: #FFFFFF !important;
+}
+
+.emergency-active .bg-white {
+    background-color: #1a1a1a !important;
+    border-color: #333333 !important;
+}
+
+.emergency-active .bg-slate-50 {
+    background-color: #222222 !important;
+}
+
+.emergency-active header {
+    background-color: #000000 !important;
+    border-bottom: 2px solid #DC2626;
+}
