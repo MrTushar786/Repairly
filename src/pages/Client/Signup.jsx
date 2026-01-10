@@ -37,6 +37,9 @@ export default function ClientSignup() {
     const handleGoogleLogin = async () => {
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
+            options: {
+                redirectTo: window.location.origin
+            }
         });
         if (error) alert(error.message);
     };

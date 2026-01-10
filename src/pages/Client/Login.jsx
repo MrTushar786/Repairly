@@ -42,7 +42,7 @@ export default function ClientLogin() {
             const { error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
-                    redirectTo: 'https://yvvffqwmkjhagpookyrs.supabase.co/auth/v1/callback'
+                    redirectTo: window.location.origin
                 }
             });
             if (error) throw error;

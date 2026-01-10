@@ -13,12 +13,14 @@ import AdminDashboard from './pages/Admin/Dashboard';
 import ClientLogin from './pages/Client/Login';
 import ClientSignup from './pages/Client/Signup';
 import ClientDashboard from './pages/Client/Dashboard';
+import AuthListener from './components/AuthListener';
 import './App.css';
 
 function App() {
   return (
     <Router>
       <ScrollToTop />
+      <AuthListener />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
