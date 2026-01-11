@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../supabase';
 import { useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Calendar, MessageSquare, LogOut, Trash2, Clock, Smartphone, User, TrendingUp, DollarSign, Users, Activity, Mail, Plus, Edit2, Battery, Droplets, Usb, Disc, Wrench, Cpu, Wifi, Camera, Speaker, X, Image as ImageIcon, Database, Laptop, Gamepad2, Tablet, Menu, Layers, Phone, Save, Settings } from 'lucide-react';
+import { LayoutDashboard, Calendar, MessageSquare, LogOut, Trash2, Clock, Smartphone, User, TrendingUp, DollarSign, Users, Activity, Mail, Plus, Edit2, Battery, Droplets, Usb, Disc, Wrench, Cpu, Wifi, Camera, Speaker, X, Image as ImageIcon, Database, Laptop, Gamepad2, Tablet, Menu, Layers, Phone, Save, Settings, AlertTriangle } from 'lucide-react';
 import { DEVICE_MODELS } from '../../data';
 import { useShop } from '../../context/ShopContext';
 
@@ -18,6 +18,7 @@ export default function AdminDashboard() {
     const [editingService, setEditingService] = useState(null); // {id, label, price, icon_key}
     const [editingBooking, setEditingBooking] = useState(null); // For Booking Edit Modal
     const [showSqlModal, setShowSqlModal] = useState(false); // Helper for SQL
+    const [deleteConfirm, setDeleteConfirm] = useState({ show: false, table: '', id: '' }); // Custom Delete Modal State
     const navigate = useNavigate();
 
     // Shop Context
@@ -85,9 +86,16 @@ export default function AdminDashboard() {
         navigate('/admin');
     };
 
-    const handleDelete = async (table, id) => {
-        if (!confirm('Are you sure you want to delete this record?')) return;
+    const handleDelete = (table, id) => {
+        setDeleteConfirm({ show: true, table, id });
+    };
+
+    const confirmDelete = async () => {
+        const { table, id } = deleteConfirm;
+        if (!table || !id) return;
+
         const { error } = await supabase.from(table).delete().eq('id', id);
+
         if (error) {
             alert('Error deleting: ' + error.message);
         } else {
@@ -97,6 +105,7 @@ export default function AdminDashboard() {
             if (table === 'bookings') setBookings(bookings.filter(b => b.id !== id));
             if (table === 'support_tickets') setTickets(tickets.filter(t => t.id !== id));
         }
+        setDeleteConfirm({ show: false, table: '', id: '' });
     };
 
     const handleSaveService = async () => {
@@ -1280,6 +1289,37 @@ create policy "Admin Write" on site_settings for all to authenticated using (tru
                 )
                 }
             </main >
+
+            {/* Delete Confirmation Modal */}
+            {deleteConfirm.show && (
+                <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm relative animate-in zoom-in-95 duration-200">
+                        <div className="flex flex-col items-center text-center">
+                            <div className="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mb-4">
+                                <AlertTriangle size={32} />
+                            </div>
+                            <h3 className="text-xl font-black text-slate-800 mb-2">Are you sure?</h3>
+                            <p className="text-slate-500 text-sm mb-6 leading-relaxed">
+                                This action cannot be undone. This record will be permanently deleted from the database.
+                            </p>
+                            <div className="flex gap-3 w-full">
+                                <button
+                                    onClick={() => setDeleteConfirm({ show: false, table: '', id: '' })}
+                                    className="flex-1 py-3 text-slate-500 font-bold hover:bg-slate-50 rounded-xl transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={confirmDelete}
+                                    className="flex-1 py-3 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 shadow-lg shadow-red-200 transition-colors"
+                                >
+                                    Yes, Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div >
     );
 }
