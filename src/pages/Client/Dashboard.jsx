@@ -7,6 +7,7 @@ import { Smartphone, Clock, CheckCircle, AlertCircle, LogOut, Wrench, User, Save
 export default function ClientDashboard() {
     const [user, setUser] = useState(null);
     const [myRepairs, setMyRepairs] = useState([]);
+    const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('repairs'); // 'repairs' | 'profile'
     const navigate = useNavigate();
@@ -32,6 +33,11 @@ export default function ClientDashboard() {
 
                 fetchRepairs(user.email);
             }
+
+            // Fetch Services for lookup
+            const { data: serviceData } = await supabase.from('repair_services').select('id, label');
+            if (serviceData) setServices(serviceData);
+
             setLoading(false);
         };
         getSession();
@@ -184,7 +190,7 @@ export default function ClientDashboard() {
                                                                 <div className="flex items-center gap-2 text-sm text-slate-500">
                                                                     <span className="font-mono text-xs">#{repair.id}</span>
                                                                     <span>•</span>
-                                                                    <span>{repair.service_type}</span>
+                                                                    <span>{services.find(s => s.id === repair.service_type)?.label || repair.service_type}</span>
                                                                 </div>
                                                             </div>
                                                         </div>

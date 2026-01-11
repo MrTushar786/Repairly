@@ -307,7 +307,7 @@ export default function AdminDashboard() {
                                         <tr key={b.id} className="hover:bg-slate-50 transition-colors">
                                             <td className="p-4 pl-6 font-bold text-slate-800">{b.device_brand} {b.device_model}</td>
                                             <td className="p-4 text-slate-500">Walk-In Customer</td>
-                                            <td className="p-4"><span className="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-bold uppercase">{b.service_type}</span></td>
+                                            <td className="p-4"><span className="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-bold uppercase">{services.find(s => s.id === b.service_type)?.label || b.service_type}</span></td>
                                             <td className="p-4">{b.appointment_date}</td>
                                             <td className="p-4 text-right"><span className="text-green-600 font-bold text-xs bg-green-50 px-2 py-1 rounded-full">CONFIRMED</span></td>
                                         </tr>
@@ -343,7 +343,7 @@ export default function AdminDashboard() {
                                         <td className="p-4 pl-6 font-mono text-xs text-slate-400">#{b.id}</td>
                                         <td className="p-4">
                                             <div className="font-bold text-slate-800">{b.device_brand} {b.device_model}</div>
-                                            <div className="text-xs text-slate-400 bg-slate-100 inline-block px-1.5 py-0.5 rounded mt-1">{b.service_type}</div>
+                                            <div className="text-xs text-slate-400 bg-slate-100 inline-block px-1.5 py-0.5 rounded mt-1">{services.find(s => s.id === b.service_type)?.label || b.service_type}</div>
                                         </td>
                                         <td className="p-4">
                                             <div className="flex flex-col gap-1 items-start">
