@@ -303,12 +303,12 @@ export default function Home() {
                     <div className="flex flex-col md:flex-row items-end justify-between mb-10">
                         <div className="max-w-2xl">
                             <span className="text-primary font-bold tracking-widest uppercase text-xs mb-2 block">Visit Us</span>
-                            <h2 className="text-4xl font-bold text-secondary mb-4">NYC Tech Hub</h2>
+                            <h2 className="text-4xl font-bold text-secondary mb-4">{SHOP_DATA.name}</h2>
                             <p className="text-text-muted text-lg">Expert repairs in the heart of the city. Walk-ins welcome for all devices.</p>
                         </div>
-                        <button className="hidden md:flex items-center gap-2 text-primary font-bold hover:underline transition-all hover:gap-3">
+                        <a href={SHOP_DATA.mapLink} target="_blank" rel="noopener noreferrer" className="hidden md:flex items-center gap-2 text-primary font-bold hover:underline transition-all hover:gap-3">
                             View Full Map <ChevronRight size={18} />
-                        </button>
+                        </a>
                     </div>
 
                     <div className="bg-slate-900 rounded-3xl h-[600px] relative overflow-hidden group shadow-2xl ring-1 ring-slate-900/5">
@@ -363,9 +363,9 @@ export default function Home() {
                     </div>
 
                     <div className="md:hidden mt-6 text-center">
-                        <button className="flex items-center justify-center gap-2 text-primary font-bold w-full p-4 bg-white rounded-xl shadow-sm border border-slate-100">
+                        <a href={SHOP_DATA.mapLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 text-primary font-bold w-full p-4 bg-white rounded-xl shadow-sm border border-slate-100">
                             View Full Map <ChevronRight size={18} />
-                        </button>
+                        </a>
                     </div>
                 </div >
             </section >

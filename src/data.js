@@ -4,11 +4,11 @@ export const SHOP_DATA = {
         namePrefix: "MR.",
         nameHighlight: "FIX MY PHONE",
         subDetails: "Repair Support Team",
-        logoText: "MR. FIX MY PHONE", 
+        logoText: "MR. FIX MY PHONE",
     },
     tagline: "When your tech stops working, we start.",
     area: "Global Network",
-    phone: "18005550199", 
+    phone: "18005550199",
     displayPhone: "18005550199",
     whatsapp: "18005550199",
     email: "help@mrfixmyphone.com",
@@ -31,7 +31,7 @@ export const SHOP_DATA = {
         linkedin: "#"
     },
     googleMapEmbed: "https://maps.google.com/maps?q=267%205th%20Ave%20Suite%20106%2C%20New%20York%2C%20NY%2010016&t=&z=15&ie=UTF8&iwloc=&output=embed",
-    mapLink: "#",
+    mapLink: "https://www.google.com/maps/search/?api=1&query=267+5th+Ave+Suite+106,+New+York,+NY+10016",
     hours: {
         weekdays: "8:00 AM - 8:00 PM",
         saturday: "9:00 AM - 6:00 PM",
