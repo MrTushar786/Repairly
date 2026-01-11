@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Phone, MessageCircle, Menu, MapPin, X, ChevronDown, LogOut, User, Clock } from 'lucide-react';
+import { Phone, MessageCircle, Menu, MapPin, X, ChevronDown, LogOut, User, Clock, Sun, Moon, Wrench } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
 import { useShop } from '../context/ShopContext';
@@ -45,7 +45,7 @@ export default function Header({ darkMode, setDarkMode }) {
     };
 
     return (
-        <header className="fixed w-full top-0 z-50 bg-white shadow-sm transition-all duration-300">
+        <header className="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300 border-b border-slate-100/50">
 
             {/* Shop Status Banner - Closed */}
             {shopData.isOpen === false && (
@@ -116,21 +116,17 @@ export default function Header({ darkMode, setDarkMode }) {
                     <Link to="/contact" className="text-sm font-bold text-secondary hover:text-primary transition-colors">CONTACT US</Link>
                 </nav>
 
-                <div className="flex gap-6 items-center">
+                <div className="flex gap-4 items-center">
 
-                    {/* Dark Mode Toggle */}
-                    <div className="hidden lg:flex items-center gap-3">
-                        <button
-                            onClick={() => setDarkMode(!darkMode)}
-                            className={`relative w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none ${darkMode ? 'bg-slate-700' : 'bg-slate-300'}`}
-                            aria-label="Toggle Dark Mode"
-                        >
-                            <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-300 ${darkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
-                        </button>
-                        <span className={`text-xs font-bold uppercase tracking-wider ${darkMode ? 'text-white' : 'text-slate-400'}`}>
-                            Dark Mode
-                        </span>
-                    </div>
+                    {/* Dark Mode Toggle (Icon Only now) */}
+                    <button
+                        onClick={() => setDarkMode(!darkMode)}
+                        className="p-2.5 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-all duration-300 focus:outline-none shadow-sm hidden md:flex"
+                        aria-label="Toggle Dark Mode"
+                        title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                    >
+                        {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+                    </button>
 
                     {/* User Profile / Sign In */}
                     {user ? (
@@ -139,18 +135,18 @@ export default function Header({ darkMode, setDarkMode }) {
                                 <img
                                     src={user.user_metadata.custom_avatar_url || user.user_metadata.avatar_url || user.user_metadata.picture}
                                     alt="Profile"
-                                    className="w-9 h-9 rounded-full object-cover border border-slate-200 shadow-sm group-hover:ring-2 group-hover:ring-primary/20 transition-all"
+                                    className="w-10 h-10 rounded-full object-cover border-2 border-slate-100 shadow-sm group-hover:ring-2 group-hover:ring-primary/20 transition-all"
                                 />
                             ) : (
-                                <div className="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center border border-slate-200 group-hover:bg-primary group-hover:text-white transition-all">
-                                    <User size={18} />
+                                <div className="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center border-2 border-slate-100 group-hover:bg-primary group-hover:text-white transition-all">
+                                    <User size={20} />
                                 </div>
                             )}
                         </Link>
                     ) : (
                         <Link
                             to="/login"
-                            className="hidden md:flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-primary transition-colors"
+                            className="hidden md:flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-primary transition-colors px-2"
                         >
                             <User size={18} />
                             <span>Sign In</span>
@@ -158,8 +154,8 @@ export default function Header({ darkMode, setDarkMode }) {
                     )}
 
                     {/* Start Repair Button */}
-                    <Link to="/booking" className={`hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full font-bold transition-all text-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 bg-gradient-to-r from-orange-400 to-accent text-white`}>
-                        <span className="text-lg">🔧</span>
+                    <Link to="/booking" className={`hidden md:flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all text-sm shadow-lg shadow-orange-200/50 hover:shadow-orange-300/50 hover:-translate-y-0.5 bg-gradient-to-r from-orange-500 to-red-500 text-white`}>
+                        <Wrench size={16} className="text-white/90" />
                         START REPAIR
                     </Link>
 
