@@ -75,11 +75,11 @@
     --color-primary-light: #1E293B !important;
     /* Slate-800 */
     --color-primary-hover: #2563EB !important;
-    --color-secondary: #000000 !important;
-    --color-accent: #FFFFFF !important;
-    /* White accent */
+    --color-secondary: #0F172A !important;
+    /* Keep Secondary Dark for Backgrounds */
+    /* Accent falls back to default Orange */
     --color-bg-body: #0F172A !important;
-    /* Slate-900 BG - smoother than pure black */
+    /* Slate-900 BG */
     --color-text-main: #F8FAFC !important;
     --color-text-muted: #94A3B8 !important;
 }
@@ -89,14 +89,24 @@
     color: #F8FAFC !important;
 }
 
-.emergency-active .bg-white {
+/* Force ALL white backgrounds to be dark Slate-800 */
+.emergency-active [class*="bg-white"] {
     background-color: #1E293B !important;
-    /* Slate-800 */
     border-color: #334155 !important;
+    color: #F8FAFC !important;
+}
+
+/* Fix slate text to be visible on dark bg */
+.emergency-active .text-slate-500,
+.emergency-active .text-slate-600,
+.emergency-active .text-slate-700 {
+    color: #94A3B8 !important;
 }
 
 .emergency-active .bg-slate-50 {
-    background-color: #0F172A !important;
+    background-color: #1E293B !important;
+    /* Slate-800 for contrast against Slate-900 body */
+    border-color: #334155 !important;
 }
 
 .emergency-active header {
