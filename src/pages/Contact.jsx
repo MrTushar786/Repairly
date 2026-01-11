@@ -38,8 +38,7 @@ export default function Contact() {
                     name: formState.name,
                     email: formState.email,
                     subject: formState.subject || 'General Inquiry',
-                    message: formState.message,
-                    user_id: user?.id
+                    message: formState.message
                 }]);
 
             if (error) throw error;
