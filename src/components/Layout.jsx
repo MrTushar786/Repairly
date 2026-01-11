@@ -28,12 +28,11 @@ export default function Layout() {
     }, [darkMode]);
 
     return (
-        <div className={`min-h-screen transition-colors duration-500 pb-20 md:pb-0`}>
+        <div className={`min-h-screen transition-colors duration-500 pb-32 lg:pb-0`}>
             <Header darkMode={darkMode} setDarkMode={setDarkMode} user={user} />
             <main>
                 <Outlet context={{ darkMode }} />
             </main>
-            <Footer />
             <Footer />
             <FloatingActions />
             <MobileBottomNav user={user} />

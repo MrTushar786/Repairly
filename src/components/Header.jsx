@@ -55,7 +55,7 @@ export default function Header({ darkMode, setDarkMode }) {
             )}
 
             {/* Top Bar for Desktop (Only show if Open, or keep stacked?) -> Let's keep it stacked but maybe hide if closed to reduce clutter? No, keep features. */}
-            < div className="hidden md:flex bg-secondary text-white text-xs py-2 justify-center gap-6 font-semibold tracking-wide" >
+            < div className="hidden lg:flex bg-secondary text-white text-xs py-2 justify-center gap-6 font-semibold tracking-wide" >
                 {shopData.topFeatures.map((feature, index) => (
                     <React.Fragment key={index}>
                         <span>{feature}</span>
@@ -65,15 +65,15 @@ export default function Header({ darkMode, setDarkMode }) {
             </div >
 
             <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
-                <Link to="/" className="flex flex-col leading-none group">
-                    <span className="text-2xl font-black text-primary tracking-tighter uppercase group-hover:opacity-90 transition-opacity">
+                <Link to="/" className="flex flex-col leading-none group shrink-0">
+                    <span className="text-2xl font-black text-primary tracking-tighter uppercase group-hover:opacity-90 transition-opacity whitespace-nowrap">
                         {shopData.branding.namePrefix} <span className="text-secondary">{shopData.branding.nameHighlight}</span>
                     </span>
-                    <span className="text-[10px] font-bold text-text-muted tracking-[0.2em] uppercase">{shopData.branding.subDetails}</span>
+                    <span className="text-[10px] font-bold text-text-muted tracking-[0.2em] uppercase whitespace-nowrap">{shopData.branding.subDetails}</span>
                 </Link>
 
                 {/* Desktop Nav */}
-                <nav className="hidden md:flex items-center gap-8">
+                <nav className="hidden lg:flex items-center gap-8">
 
                     {/* Services Dropdown */}
                     <div className="relative group">
@@ -119,7 +119,7 @@ export default function Header({ darkMode, setDarkMode }) {
                     {/* Dark Mode Toggle (Icon Only now) */}
                     <button
                         onClick={() => setDarkMode(!darkMode)}
-                        className="p-2.5 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-all duration-300 focus:outline-none shadow-sm hidden md:flex"
+                        className="p-2.5 rounded-full bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-slate-800 transition-all duration-300 focus:outline-none shadow-sm flex"
                         aria-label="Toggle Dark Mode"
                         title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
                     >
@@ -128,7 +128,7 @@ export default function Header({ darkMode, setDarkMode }) {
 
                     {/* User Profile / Sign In */}
                     {user ? (
-                        <Link to="/client/dashboard" className="hidden md:flex items-center gap-2 group" title="My Dashboard">
+                        <Link to="/client/dashboard" className="hidden lg:flex items-center gap-2 group" title="My Dashboard">
                             {user.user_metadata?.custom_avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
                                 <img
                                     src={user.user_metadata.custom_avatar_url || user.user_metadata.avatar_url || user.user_metadata.picture}
@@ -144,7 +144,7 @@ export default function Header({ darkMode, setDarkMode }) {
                     ) : (
                         <Link
                             to="/login"
-                            className="hidden md:flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-primary transition-colors px-2"
+                            className="hidden lg:flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-primary transition-colors px-2"
                         >
                             <User size={18} />
                             <span>Sign In</span>
@@ -152,7 +152,7 @@ export default function Header({ darkMode, setDarkMode }) {
                     )}
 
                     {/* Start Repair Button */}
-                    <Link to="/booking" className={`hidden md:flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all text-sm shadow-lg shadow-orange-200/50 hover:shadow-orange-300/50 hover:-translate-y-0.5 bg-gradient-to-r from-orange-500 to-red-500 text-white`}>
+                    <Link to="/booking" className={`hidden lg:flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all text-sm shadow-lg shadow-orange-200/50 hover:shadow-orange-300/50 hover:-translate-y-0.5 bg-gradient-to-r from-orange-500 to-red-500 text-white`}>
                         <Wrench size={16} className="text-white/90" />
                         START REPAIR
                     </Link>

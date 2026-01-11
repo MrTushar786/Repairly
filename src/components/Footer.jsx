@@ -1,9 +1,17 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
 import { SHOP_DATA } from '../data';
 
 export default function Footer() {
+    const navigate = useNavigate();
+    const [email, setEmail] = React.useState('');
+
+    const handleSubscribe = (e) => {
+        e.preventDefault();
+        navigate('/contact', { state: { email } });
+    };
+
     return (
         <footer className="bg-secondary text-white pt-16 pb-24 border-t border-slate-800">
             <div className="container mx-auto px-4">
@@ -78,13 +86,16 @@ export default function Footer() {
                         </div>
 
                         <h5 className="font-bold text-sm mb-3">Subscribe to our newsletter</h5>
-                        <form className="flex gap-2">
+                        <form onSubmit={handleSubscribe} className="flex gap-2">
                             <input
                                 type="email"
                                 placeholder="Email address"
+                                required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                                 className="bg-slate-800 border-none rounded-lg px-3 py-2 text-sm text-white focus:ring-1 focus:ring-primary w-full outline-none"
                             />
-                            <button className="bg-primary text-white px-3 py-2 rounded-lg font-bold text-sm hover:bg-orange-600 transition-colors">
+                            <button type="submit" className="bg-primary text-white px-3 py-2 rounded-lg font-bold text-sm hover:bg-orange-600 transition-colors">
                                 GO
                             </button>
                         </form>

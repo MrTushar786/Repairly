@@ -22,7 +22,7 @@ export default function MobileBottomNav({ user }) {
     ];
 
     return (
-        <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-100 flex justify-around items-end px-2 py-2 z-[60] pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.03)] backdrop-blur-md bg-white/90">
+        <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-100 flex justify-around items-end px-2 py-2 z-[60] pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.03)] backdrop-blur-md bg-white/90">
             {navItems.map((item) => {
                 const active = isActive(item.path);
                 const isRepair = item.id === 'repair';

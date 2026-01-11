@@ -328,7 +328,7 @@ export default function Home() {
 
 
                         {/* Floating Info Card */}
-                        <div className="absolute top-6 right-6 w-full max-w-[320px] bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                        <div className="hidden lg:block absolute top-6 right-6 w-full max-w-[320px] bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
                             <div className="flex items-start gap-4">
                                 <div className="bg-primary/10 p-3 rounded-xl text-primary">
                                     <MapPin size={24} />

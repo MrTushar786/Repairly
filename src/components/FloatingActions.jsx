@@ -1,17 +1,30 @@
 import React from 'react';
 import { Phone, MessageCircle } from 'lucide-react';
 import { SHOP_DATA } from '../data';
+import { useLocation } from 'react-router-dom';
 
 export default function FloatingActions() {
+    const location = useLocation();
+
+    // Only show on Contact page
+    if (location.pathname !== '/contact') return null;
+
     return (
-        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex gap-4 p-2 bg-white/80 backdrop-blur-xl rounded-full border border-white/40 shadow-2xl ring-1 ring-black/5 hover:scale-105 transition-transform duration-300">
-            <a href={`https://wa.me/${SHOP_DATA.whatsapp}`} className="flex items-center gap-2 px-6 py-3 rounded-full bg-[#25D366] text-white font-bold text-sm shadow-lg shadow-green-500/20 hover:brightness-105 active:scale-95 transition-all group">
-                <MessageCircle size={20} className="group-hover:animate-bounce" />
-                <span>WhatsApp</span>
+        <div className="fixed bottom-28 lg:bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex gap-3 animate-in fade-in slide-in-from-bottom-4 items-center">
+            <a
+                href={`https://wa.me/${SHOP_DATA.whatsapp}`}
+                className="flex items-center gap-2 pl-3 pr-5 py-2.5 rounded-full bg-[#25D366] text-white hover:bg-[#20bd5a] transition-all shadow-lg hover:shadow-green-500/30 hover:-translate-y-1 active:scale-95 border border-white/10 backdrop-blur-sm"
+            >
+                <MessageCircle size={18} fill="currentColor" className="text-white" />
+                <span className="text-xs font-bold tracking-wide">Chat</span>
             </a>
-            <a href={`tel:${SHOP_DATA.phone}`} className="flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-white font-bold text-sm shadow-lg shadow-primary/25 hover:bg-primary-hover active:scale-95 transition-all group">
-                <Phone size={20} className="group-hover:animate-shake" />
-                <span>Call Now</span>
+
+            <a
+                href={`tel:${SHOP_DATA.phone}`}
+                className="flex items-center gap-2 pl-3 pr-5 py-2.5 rounded-full bg-primary text-white hover:bg-primary-hover transition-all shadow-lg hover:shadow-primary/30 hover:-translate-y-1 active:scale-95 border border-white/10 backdrop-blur-sm"
+            >
+                <Phone size={18} fill="currentColor" className="text-white" />
+                <span className="text-xs font-bold tracking-wide">Call</span>
             </a>
         </div>
     );
