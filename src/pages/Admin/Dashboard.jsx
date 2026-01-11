@@ -2,8 +2,9 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../supabase';
 import { useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Calendar, MessageSquare, LogOut, Trash2, Clock, Smartphone, User, TrendingUp, DollarSign, Users, Activity, Mail, Plus, Edit2, Battery, Droplets, Usb, Disc, Wrench, Cpu, Wifi, Camera, Speaker, X, Image as ImageIcon, Database, Laptop, Gamepad2, Tablet, Menu, Layers, Phone, Save } from 'lucide-react';
+import { LayoutDashboard, Calendar, MessageSquare, LogOut, Trash2, Clock, Smartphone, User, TrendingUp, DollarSign, Users, Activity, Mail, Plus, Edit2, Battery, Droplets, Usb, Disc, Wrench, Cpu, Wifi, Camera, Speaker, X, Image as ImageIcon, Database, Laptop, Gamepad2, Tablet, Menu, Layers, Phone, Save, Settings } from 'lucide-react';
 import { DEVICE_MODELS } from '../../data';
+import { useShop } from '../../context/ShopContext';
 
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('overview');
@@ -19,6 +20,16 @@ export default function AdminDashboard() {
     const [showSqlModal, setShowSqlModal] = useState(false); // Helper for SQL
     const navigate = useNavigate();
 
+    // Shop Context
+    const { shopData, updateShopData } = useShop();
+    const [settingsForm, setSettingsForm] = useState(shopData);
+
+    useEffect(() => {
+        if (shopData) {
+            setSettingsForm(shopData);
+        }
+    }, [shopData]);
+
     const MENU_ITEMS = [
         { id: 'overview', label: 'Overview', icon: LayoutDashboard },
         { id: 'bookings', label: 'Bookings', icon: Calendar },
@@ -26,6 +37,7 @@ export default function AdminDashboard() {
         { id: 'services', label: 'Service Catalog', icon: Wrench },
         { id: 'menu', label: 'Header Menu', icon: Menu },
         { id: 'models', label: 'Device Models', icon: Layers },
+        { id: 'settings', label: 'Site Settings', icon: Settings },
     ];
 
     useEffect(() => {
@@ -998,7 +1010,198 @@ export default function AdminDashboard() {
                         </div>
                     </div>
                 )}
-                {/* SQL Modal */}
+                {/* Site Settings Tab */}
+                {activeTab === 'settings' && (
+                    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4">
+                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
+                            <div className="flex items-center justify-between mb-8 border-b border-slate-100 pb-6">
+                                <div>
+                                    <h2 className="text-2xl font-black text-slate-800">Global Site Settings</h2>
+                                    <p className="text-slate-500">Update your business information across the entire website.</p>
+                                </div>
+                                <button
+                                    onClick={async () => {
+                                        try {
+                                            await updateShopData(settingsForm);
+                                            alert('Settings saved successfully!');
+                                        } catch (error) {
+                                            alert('Error saving settings: ' + error.message);
+                                        }
+                                    }}
+                                    className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 flex items-center gap-2"
+                                >
+                                    <Save size={18} /> Save Changes
+                                </button>
+                            </div>
+
+                            <div className="space-y-8">
+                                {/* General Info */}
+                                <section>
+                                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                        <div className="w-1 h-6 bg-blue-500 rounded-full"></div> General Information
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Shop Name</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.name}
+                                                onChange={e => setSettingsForm({ ...settingsForm, name: e.target.value })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:border-blue-500 outline-none"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Tagline</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.tagline}
+                                                onChange={e => setSettingsForm({ ...settingsForm, tagline: e.target.value })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:border-blue-500 outline-none"
+                                            />
+                                        </div>
+                                    </div>
+                                </section>
+
+                                {/* Contact Details */}
+                                <section>
+                                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                        <div className="w-1 h-6 bg-green-500 rounded-full"></div> Contact Details
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div>
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Phone (Internal)</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.phone}
+                                                onChange={e => setSettingsForm({ ...settingsForm, phone: e.target.value })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:border-blue-500 outline-none"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Display Phone</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.displayPhone}
+                                                onChange={e => setSettingsForm({ ...settingsForm, displayPhone: e.target.value })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:border-blue-500 outline-none"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">WhatsApp</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.whatsapp}
+                                                onChange={e => setSettingsForm({ ...settingsForm, whatsapp: e.target.value })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:border-blue-500 outline-none"
+                                            />
+                                        </div>
+                                        <div className="md:col-span-3">
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Email</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.email}
+                                                onChange={e => setSettingsForm({ ...settingsForm, email: e.target.value })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:border-blue-500 outline-none"
+                                            />
+                                        </div>
+                                    </div>
+                                </section>
+
+                                {/* Branding */}
+                                <section>
+                                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                        <div className="w-1 h-6 bg-purple-500 rounded-full"></div> Branding
+                                    </h3>
+                                    <div className="grid grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Name Prefix</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.branding.namePrefix}
+                                                onChange={e => setSettingsForm({ ...settingsForm, branding: { ...settingsForm.branding, namePrefix: e.target.value } })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Name Highlight</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.branding.nameHighlight}
+                                                onChange={e => setSettingsForm({ ...settingsForm, branding: { ...settingsForm.branding, nameHighlight: e.target.value } })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                            />
+                                        </div>
+                                        <div className="col-span-2">
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Sub Details / Tag</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.branding.subDetails}
+                                                onChange={e => setSettingsForm({ ...settingsForm, branding: { ...settingsForm.branding, subDetails: e.target.value } })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                            />
+                                        </div>
+                                    </div>
+                                </section>
+
+                                {/* Location */}
+                                <section>
+                                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                        <div className="w-1 h-6 bg-orange-500 rounded-full"></div> Location
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="md:col-span-2">
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Street Address</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.address.street}
+                                                onChange={e => setSettingsForm({ ...settingsForm, address: { ...settingsForm.address, street: e.target.value } })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">City</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.address.city}
+                                                onChange={e => setSettingsForm({ ...settingsForm, address: { ...settingsForm.address, city: e.target.value } })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">State</label>
+                                                <input
+                                                    type="text"
+                                                    value={settingsForm.address.state}
+                                                    onChange={e => setSettingsForm({ ...settingsForm, address: { ...settingsForm.address, state: e.target.value } })}
+                                                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">ZIP</label>
+                                                <input
+                                                    type="text"
+                                                    value={settingsForm.address.zip}
+                                                    onChange={e => setSettingsForm({ ...settingsForm, address: { ...settingsForm.address, zip: e.target.value } })}
+                                                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="md:col-span-2">
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Google Maps Link</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.mapLink}
+                                                onChange={e => setSettingsForm({ ...settingsForm, mapLink: e.target.value })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                            />
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 {showSqlModal && (
                     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
                         <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl relative">
@@ -1028,7 +1231,17 @@ create table if not exists service_menu_items (
 );
 alter table service_menu_items enable row level security;
 create policy "Public Read" on service_menu_items for select using (true);
-create policy "Admin Write" on service_menu_items for all to authenticated using (true);`}
+create policy "Admin Write" on service_menu_items for all to authenticated using (true);
+
+-- 3. Create Site Settings Table
+create table if not exists site_settings (
+  key text primary key,
+  value jsonb,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+alter table site_settings enable row level security;
+create policy "Public Read" on site_settings for select using (true);
+create policy "Admin Write" on site_settings for all to authenticated using (true);`}
                                 </pre>
                                 <button
                                     onClick={() => {

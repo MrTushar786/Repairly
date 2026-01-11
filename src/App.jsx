@@ -14,30 +14,33 @@ import ClientLogin from './pages/Client/Login';
 import ClientSignup from './pages/Client/Signup';
 import ClientDashboard from './pages/Client/Dashboard';
 import AuthListener from './components/AuthListener';
+import { ShopProvider } from './context/ShopContext';
 import './App.css';
 
 function App() {
   return (
     <Router>
-      <ScrollToTop />
-      <AuthListener />
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="services" element={<Services />} />
-          <Route path="contact" element={<Contact />} />
-          <Route path="about" element={<About />} />
-          <Route path="booking" element={<Booking />} />
-          <Route path="business" element={<Business />} />
-          <Route path="login" element={<ClientLogin />} />
-          <Route path="signup" element={<ClientSignup />} />
-          <Route path="client/dashboard" element={<ClientDashboard />} />
-        </Route>
+      <ShopProvider>
+        <ScrollToTop />
+        <AuthListener />
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="services" element={<Services />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="about" element={<About />} />
+            <Route path="booking" element={<Booking />} />
+            <Route path="business" element={<Business />} />
+            <Route path="login" element={<ClientLogin />} />
+            <Route path="signup" element={<ClientSignup />} />
+            <Route path="client/dashboard" element={<ClientDashboard />} />
+          </Route>
 
-        {/* Admin Routes - Standalone Layout */}
-        <Route path="/admin" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      </Routes>
+          {/* Admin Routes - Standalone Layout */}
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        </Routes>
+      </ShopProvider>
     </Router>
   );
 }
