@@ -1012,12 +1012,12 @@ export default function AdminDashboard() {
                 )}
                 {/* Site Settings Tab */}
                 {activeTab === 'settings' && (
-                    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4">
-                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-8">
-                            <div className="flex items-center justify-between mb-8 border-b border-slate-100 pb-6">
+                    <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4">
+                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 md:p-8">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8 border-b border-slate-100 pb-6">
                                 <div>
-                                    <h2 className="text-2xl font-black text-slate-800">Global Site Settings</h2>
-                                    <p className="text-slate-500">Update your business information across the entire website.</p>
+                                    <h2 className="text-xl md:text-2xl font-black text-slate-800">Global Site Settings</h2>
+                                    <p className="text-sm md:text-base text-slate-500">Update your business information across the entire website.</p>
                                 </div>
                                 <button
                                     onClick={async () => {
@@ -1028,13 +1028,13 @@ export default function AdminDashboard() {
                                             alert('Error saving settings: ' + error.message);
                                         }
                                     }}
-                                    className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 flex items-center gap-2"
+                                    className="w-full md:w-auto px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 flex items-center justify-center gap-2"
                                 >
                                     <Save size={18} /> Save Changes
                                 </button>
                             </div>
 
-                            <div className="space-y-8">
+                            <div className="space-y-6 md:space-y-8">
                                 {/* General Info */}
                                 <section>
                                     <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
