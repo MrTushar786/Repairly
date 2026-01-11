@@ -13,15 +13,22 @@ export default function Footer() {
                     {/* Brand Column */}
                     <div className="space-y-6">
                         <Link to="/" className="inline-block">
-                            <span className="text-2xl font-black text-white tracking-tighter uppercase">MR. <span className="text-primary">FIX MY PHONE</span></span>
-                            <span className="block text-[10px] font-bold text-slate-400 tracking-[0.2em] uppercase mt-1">Tech Triage Unit</span>
+                            <span className="text-2xl font-black text-white tracking-tighter uppercase">
+                                {SHOP_DATA.branding.namePrefix} <span className="text-primary">{SHOP_DATA.branding.nameHighlight}</span>
+                            </span>
+                            <span className="block text-[10px] font-bold text-slate-400 tracking-[0.2em] uppercase mt-1">{SHOP_DATA.branding.subDetails}</span>
                         </Link>
                         <p className="text-slate-400 text-sm leading-relaxed">
                             {SHOP_DATA.tagline} Authorized partners with major manufacturers. We save devices and the planet.
                         </p>
                         <div className="flex gap-4">
-                            {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
-                                <a key={i} href="#" className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors text-white">
+                            {[
+                                { Icon: Facebook, link: SHOP_DATA.socials.facebook },
+                                { Icon: Twitter, link: SHOP_DATA.socials.twitter },
+                                { Icon: Instagram, link: SHOP_DATA.socials.instagram },
+                                { Icon: Linkedin, link: SHOP_DATA.socials.linkedin }
+                            ].map(({ Icon, link }, i) => (
+                                <a key={i} href={link} className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors text-white">
                                     <Icon size={16} />
                                 </a>
                             ))}

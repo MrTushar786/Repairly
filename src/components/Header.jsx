@@ -57,8 +57,10 @@ export default function Header({ emergencyMode, setEmergencyMode }) {
 
             <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
                 <Link to="/" className="flex flex-col leading-none group">
-                    <span className="text-2xl font-black text-primary tracking-tighter uppercase group-hover:opacity-90 transition-opacity">MR. <span className="text-secondary">FIX MY PHONE</span></span>
-                    <span className="text-[10px] font-bold text-text-muted tracking-[0.2em] uppercase">Tech Triage Unit</span>
+                    <span className="text-2xl font-black text-primary tracking-tighter uppercase group-hover:opacity-90 transition-opacity">
+                        {SHOP_DATA.branding.namePrefix} <span className="text-secondary">{SHOP_DATA.branding.nameHighlight}</span>
+                    </span>
+                    <span className="text-[10px] font-bold text-text-muted tracking-[0.2em] uppercase">{SHOP_DATA.branding.subDetails}</span>
                 </Link>
 
                 {/* Desktop Nav */}

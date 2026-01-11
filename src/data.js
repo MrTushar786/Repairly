@@ -1,5 +1,11 @@
 export const SHOP_DATA = {
     name: "MR. FIX MY PHONE",
+    branding: {
+        namePrefix: "MR.",
+        nameHighlight: "FIX MY PHONE",
+        subDetails: "Tech Triage Unit",
+        logoText: "MR. FIX MY PHONE", // Fallback
+    },
     tagline: "When your tech stops working, we start.",
     area: "Global Network",
     phone: "18005550199", // Clean number for tel: links
@@ -12,6 +18,12 @@ export const SHOP_DATA = {
         state: "NY",
         zip: "10016",
         full: "267 5th Ave Suite# 106, LL1, New York, NY 10016"
+    },
+    socials: {
+        facebook: "#",
+        twitter: "#",
+        instagram: "#",
+        linkedin: "#"
     },
     googleMapEmbed: "https://maps.google.com/maps?q=267%205th%20Ave%20Suite%20106%2C%20New%20York%2C%20NY%2010016&t=&z=15&ie=UTF8&iwloc=&output=embed",
     mapLink: "#",
