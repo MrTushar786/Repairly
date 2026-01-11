@@ -25,18 +25,16 @@ export default function AuthListener() {
             }
 
             if (event === 'SIGNED_IN') {
-                // If the user lands on the root with an access token (OAuth redirect), go to dashboard
-                // The hash is usually consumed by Supabase client by now, but we can check if we are on a login-like page
-                if (location.pathname === '/login' || location.pathname === '/signup' || (location.pathname === '/' && session)) {
-                    // Optional: Check if we just came from a redirect logic? 
-                    // Ideally, we redirect to dashboard on successful login.
+                const currentPath = window.location.pathname;
+                // Only redirect if explicitly on auth pages. Allow logged-in users to view Home.
+                if (currentPath === '/login' || currentPath === '/signup') {
                     navigate('/client/dashboard');
                 }
             }
         });
 
         return () => subscription.unsubscribe();
-    }, [navigate, location.pathname]);
+    }, [navigate]);
 
     return null;
 }
