@@ -72,11 +72,11 @@ export default function Home() {
                         {/* Speed Search */}
                         <div className="relative max-w-lg mx-auto mb-10 text-left">
                             <div className="relative">
-                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" />
                                 <input
                                     type="text"
                                     placeholder="Type device (e.g. 'iPhone 13')"
-                                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-slate-200 focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none text-lg font-bold shadow-lg transition-all"
+                                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-white/10 bg-white/5 backdrop-blur-md text-white placeholder:text-slate-400 focus:border-primary focus:ring-4 focus:ring-primary/20 outline-none text-lg font-bold shadow-lg transition-all"
                                     onChange={(e) => {
                                         const query = e.target.value.toLowerCase();
                                         if (query.length > 1) {
@@ -128,7 +128,7 @@ export default function Home() {
                             </button>
                             <button
                                 onClick={() => document.getElementById('store-locator').scrollIntoView({ behavior: 'smooth' })}
-                                className="w-full sm:w-auto px-8 py-4 bg-white text-secondary font-bold rounded-lg border border-slate-200 hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2"
+                                className="w-full sm:w-auto px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-bold rounded-lg border border-white/20 hover:bg-white hover:text-black hover:border-white transition-colors flex items-center justify-center gap-2"
                             >
                                 <MapPin size={18} /> FIND A STORE
                             </button>
@@ -147,7 +147,7 @@ export default function Home() {
                                 key={idx}
                                 whileHover={{ y: -5 }}
                                 onClick={() => navigate('/booking', { state: { type: item.id } })}
-                                className="flex flex-col items-center justify-center p-8 bg-white rounded-xl shadow-card border border-slate-100 hover:border-primary/30 hover:shadow-soft transition-all"
+                                className="flex flex-col items-center justify-center p-8 bg-white/95 backdrop-blur md:bg-white rounded-xl shadow-card border border-slate-100 hover:border-primary/30 hover:shadow-soft transition-all"
                             >
                                 <div className="w-14 h-14 bg-primary-light rounded-full flex items-center justify-center text-primary mb-4">
                                     <item.icon size={28} />
@@ -163,9 +163,9 @@ export default function Home() {
             <section className="py-12 border-b border-slate-200 bg-white">
                 <div className="container mx-auto px-4 max-w-7xl flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
                     {/* Mock Partners - In real site use logos */}
-                    <span className="text-xl font-bold flex items-center gap-2"><div className="w-6 h-6 bg-black rounded-full"></div> Apple Independent Provider</span>
-                    <span className="text-xl font-bold flex items-center gap-2"><div className="w-6 h-6 bg-blue-600 rounded-full"></div> Samsung Authorized</span>
-                    <span className="text-xl font-bold flex items-center gap-2"><div className="w-6 h-6 bg-red-500 rounded-full"></div> Google Authorized</span>
+                    <span className="text-xl font-bold flex items-center gap-2 text-secondary"><div className="w-6 h-6 bg-black rounded-full"></div> Apple Independent Provider</span>
+                    <span className="text-xl font-bold flex items-center gap-2 text-secondary"><div className="w-6 h-6 bg-blue-600 rounded-full"></div> Samsung Authorized</span>
+                    <span className="text-xl font-bold flex items-center gap-2 text-secondary"><div className="w-6 h-6 bg-red-500 rounded-full"></div> Google Authorized</span>
                 </div>
             </section>
 
