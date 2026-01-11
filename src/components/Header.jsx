@@ -101,29 +101,34 @@ export default function Header({ emergencyMode, setEmergencyMode }) {
 
                     <Link to="/about" className="text-sm font-bold text-secondary hover:text-primary transition-colors">ABOUT</Link>
                     <Link to="/contact" className="text-sm font-bold text-secondary hover:text-primary transition-colors">CONTACT US</Link>
-
-                    {user ? (
-                        <div className="flex items-center gap-4">
-                            <Link to="/client/dashboard" className="flex items-center gap-2 group">
-                                {user.user_metadata?.custom_avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
-                                    <img
-                                        src={user.user_metadata.custom_avatar_url || user.user_metadata.avatar_url || user.user_metadata.picture}
-                                        alt="Profile"
-                                        className="w-10 h-10 rounded-full object-cover border border-slate-200 shadow-sm group-hover:ring-2 group-hover:ring-blue-100 transition-all hover:scale-105"
-                                    />
-                                ) : (
-                                    <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-bold border border-blue-200 group-hover:ring-2 group-hover:ring-blue-100 transition-all">
-                                        <User size={20} />
-                                    </div>
-                                )}
-                            </Link>
-                        </div>
-                    ) : (
-                        <Link to="/login" className="text-sm font-bold text-slate-400 hover:text-secondary transition-colors">SIGN IN</Link>
-                    )}
                 </nav>
 
                 <div className="flex gap-4 items-center">
+                    {/* User Profile / Sign In */}
+                    {user ? (
+                        <Link to="/client/dashboard" className="hidden md:flex items-center gap-2 group mr-2" title="My Dashboard">
+                            {user.user_metadata?.custom_avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
+                                <img
+                                    src={user.user_metadata.custom_avatar_url || user.user_metadata.avatar_url || user.user_metadata.picture}
+                                    alt="Profile"
+                                    className="w-9 h-9 rounded-full object-cover border border-slate-200 shadow-sm group-hover:ring-2 group-hover:ring-primary/20 transition-all"
+                                />
+                            ) : (
+                                <div className="w-9 h-9 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center border border-slate-200 group-hover:bg-primary group-hover:text-white transition-all">
+                                    <User size={18} />
+                                </div>
+                            )}
+                        </Link>
+                    ) : (
+                        <Link
+                            to="/login"
+                            className="hidden md:flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-primary transition-colors px-3 py-2 rounded-lg hover:bg-slate-50 mr-1"
+                        >
+                            <User size={18} className="text-primary" />
+                            <span>Sign In</span>
+                        </Link>
+                    )}
+
                     {/* Emergency Toggle */}
                     <button
                         onClick={() => setEmergencyMode(!emergencyMode)}
@@ -133,7 +138,7 @@ export default function Header({ emergencyMode, setEmergencyMode }) {
                         <span className="text-[10px] font-bold uppercase tracking-wider">{emergencyMode ? 'EMERGENCY ACTIVE' : 'EMERGENCY MODE'}</span>
                     </button>
 
-                    <Link to="/booking" className={`hidden md:flex items-center gap-2 px-6 py-2.5 rounded-md font-bold transition-all text-sm shadow-md ${emergencyMode ? 'bg-white text-red-600 hover:bg-slate-200' : 'bg-accent text-white hover:bg-orange-600'}`}>
+                    <Link to="/booking" className={`hidden md:flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold transition-all text-sm shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 hover:-translate-y-0.5 ${emergencyMode ? 'bg-white text-red-600 hover:bg-slate-50' : 'bg-accent text-white hover:bg-orange-600'}`}>
                         START REPAIR
                     </Link>
 
