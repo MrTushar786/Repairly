@@ -18,7 +18,7 @@ export default function AdminDashboard() {
     const [editingService, setEditingService] = useState(null); // {id, label, price, icon_key}
     const [editingBooking, setEditingBooking] = useState(null); // For Booking Edit Modal
     const [showSqlModal, setShowSqlModal] = useState(false); // Helper for SQL
-    const [deleteConfirm, setDeleteConfirm] = useState({ show: false, table: '', id: '' }); // Custom Delete Modal State
+    const [deleteConfirm, setDeleteConfirm] = useState({ show: false, table: '', id: '', position: null }); // Custom Delete Popover State
     const navigate = useNavigate();
 
     // Shop Context
@@ -86,8 +86,19 @@ export default function AdminDashboard() {
         navigate('/admin');
     };
 
-    const handleDelete = (table, id) => {
-        setDeleteConfirm({ show: true, table, id });
+    const handleDelete = (table, id, e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const scrollY = window.scrollY;
+        // Position popover to the left of the button
+        setDeleteConfirm({
+            show: true,
+            table,
+            id,
+            position: {
+                top: rect.top + scrollY - 20,
+                right: window.innerWidth - rect.left + 10
+            }
+        });
     };
 
     const confirmDelete = async () => {
@@ -105,7 +116,7 @@ export default function AdminDashboard() {
             if (table === 'bookings') setBookings(bookings.filter(b => b.id !== id));
             if (table === 'support_tickets') setTickets(tickets.filter(t => t.id !== id));
         }
-        setDeleteConfirm({ show: false, table: '', id: '' });
+        setDeleteConfirm({ show: false, table: '', id: '', position: null });
     };
 
     const handleSaveService = async () => {
@@ -393,7 +404,7 @@ export default function AdminDashboard() {
                                                     <Edit2 size={16} />
                                                 </button>
                                                 <button
-                                                    onClick={() => handleDelete('bookings', b.id)}
+                                                    onClick={(e) => handleDelete('bookings', b.id, e)}
                                                     className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100"
                                                     title="Delete"
                                                 >
@@ -517,7 +528,7 @@ export default function AdminDashboard() {
                                                 <Mail size={16} />
                                             </a>
                                             <button
-                                                onClick={() => handleDelete('support_tickets', t.id)}
+                                                onClick={(e) => handleDelete('support_tickets', t.id, e)}
                                                 className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                                                 title="Delete Ticket"
                                             >
@@ -622,7 +633,7 @@ export default function AdminDashboard() {
                                     <div key={item.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200 group">
                                         <span className="font-bold text-slate-700">{item.label}</span>
                                         <button
-                                            onClick={() => handleDelete('service_menu_items', item.id)}
+                                            onClick={(e) => handleDelete('service_menu_items', item.id, e)}
                                             className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                                         >
                                             <Trash2 size={16} />
@@ -745,7 +756,7 @@ export default function AdminDashboard() {
                                             <span className="font-bold text-slate-800">{m.model}</span>
                                         </div>
                                         <button
-                                            onClick={() => handleDelete('device_models', m.id)}
+                                            onClick={(e) => handleDelete('device_models', m.id, e)}
                                             className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                                         >
                                             <Trash2 size={16} />
@@ -1005,7 +1016,7 @@ export default function AdminDashboard() {
                                                         <Edit2 size={16} />
                                                     </button>
                                                     <button
-                                                        onClick={() => handleDelete('repair_services', s.id)}
+                                                        onClick={(e) => handleDelete('repair_services', s.id, e)}
                                                         className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                                                     >
                                                         <Trash2 size={16} />
@@ -1291,34 +1302,49 @@ create policy "Admin Write" on site_settings for all to authenticated using (tru
             </main >
 
             {/* Delete Confirmation Modal */}
-            {deleteConfirm.show && (
-                <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-sm relative animate-in zoom-in-95 duration-200">
+            {/* Delete Confirmation Popover */}
+            {deleteConfirm.show && deleteConfirm.position && (
+                <>
+                    {/* Transparent backdrop to close on click outside */}
+                    <div
+                        className="fixed inset-0 z-[90] bg-transparent"
+                        onClick={() => setDeleteConfirm({ ...deleteConfirm, show: false })}
+                    ></div>
+
+                    <div
+                        className="absolute z-[100] bg-white rounded-2xl shadow-2xl p-6 w-80 border border-slate-100 animate-in fade-in zoom-in-95 duration-200"
+                        style={{
+                            top: deleteConfirm.position.top,
+                            right: deleteConfirm.position.right
+                        }}
+                    >
                         <div className="flex flex-col items-center text-center">
-                            <div className="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mb-4">
-                                <AlertTriangle size={32} />
+                            <div className="w-12 h-12 bg-red-100 text-red-500 rounded-full flex items-center justify-center mb-3">
+                                <AlertTriangle size={24} />
                             </div>
-                            <h3 className="text-xl font-black text-slate-800 mb-2">Are you sure?</h3>
-                            <p className="text-slate-500 text-sm mb-6 leading-relaxed">
-                                This action cannot be undone. This record will be permanently deleted from the database.
+                            <h3 className="text-lg font-black text-slate-800 mb-1">Confirm Delete</h3>
+                            <p className="text-slate-500 text-xs mb-4 leading-relaxed">
+                                Permanently remove this item?
                             </p>
-                            <div className="flex gap-3 w-full">
+                            <div className="flex gap-2 w-full">
                                 <button
-                                    onClick={() => setDeleteConfirm({ show: false, table: '', id: '' })}
-                                    className="flex-1 py-3 text-slate-500 font-bold hover:bg-slate-50 rounded-xl transition-colors"
+                                    onClick={() => setDeleteConfirm({ ...deleteConfirm, show: false })}
+                                    className="flex-1 py-2 text-slate-500 font-bold hover:bg-slate-50 rounded-lg transition-colors text-sm"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={confirmDelete}
-                                    className="flex-1 py-3 bg-red-500 text-white font-bold rounded-xl hover:bg-red-600 shadow-lg shadow-red-200 transition-colors"
+                                    className="flex-1 py-2 bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 shadow-md shadow-red-100 transition-colors text-sm"
                                 >
-                                    Yes, Delete
+                                    Delete
                                 </button>
                             </div>
                         </div>
+                        {/* Little arrow pointing to the right (towards the button) */}
+                        <div className="absolute top-8 -right-2 w-4 h-4 bg-white rotate-45 border-t border-r border-slate-100"></div>
                     </div>
-                </div>
+                </>
             )}
         </div >
     );
