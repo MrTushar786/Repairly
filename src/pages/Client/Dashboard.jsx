@@ -19,6 +19,11 @@ export default function ClientDashboard() {
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
 
+    // Scroll to top on mount
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     useEffect(() => {
         const getSession = async () => {
             const { data: { user } } = await supabase.auth.getUser();
@@ -119,7 +124,7 @@ export default function ClientDashboard() {
     if (loading) return <div className="min-h-screen flex items-center justify-center font-bold text-slate-300">Loading your profile...</div>;
 
     return (
-        <div className="min-h-screen bg-slate-50 p-6 md:p-12 pt-24 md:pt-32">
+        <div className="min-h-screen bg-slate-50 p-6 md:p-12 pt-24 md:pt-32 pb-32 md:pb-12">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">

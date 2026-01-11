@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Phone, MessageCircle, Menu, MapPin, X, ChevronDown, LogOut, User, Clock, Sun, Moon, Wrench } from 'lucide-react';
+import { Phone, MessageCircle, MapPin, ChevronDown, LogOut, User, Clock, Sun, Moon, Wrench } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
 import { useShop } from '../context/ShopContext';
