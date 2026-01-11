@@ -106,10 +106,25 @@ export default function Header({ emergencyMode, setEmergencyMode }) {
                     <Link to="/contact" className="text-sm font-bold text-secondary hover:text-primary transition-colors">CONTACT US</Link>
                 </nav>
 
-                <div className="flex gap-4 items-center">
+                <div className="flex gap-6 items-center">
+
+                    {/* Emergency Toggle */}
+                    <div className="hidden lg:flex items-center gap-3">
+                        <button
+                            onClick={() => setEmergencyMode(!emergencyMode)}
+                            className={`relative w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none ${emergencyMode ? 'bg-red-600' : 'bg-slate-300'}`}
+                            aria-label="Toggle Emergency Mode"
+                        >
+                            <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-300 ${emergencyMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                        </button>
+                        <span className={`text-xs font-bold uppercase tracking-wider ${emergencyMode ? 'text-red-600 animate-pulse' : 'text-slate-400'}`}>
+                            Emergency Mode
+                        </span>
+                    </div>
+
                     {/* User Profile / Sign In */}
                     {user ? (
-                        <Link to="/client/dashboard" className="hidden md:flex items-center gap-2 group mr-2" title="My Dashboard">
+                        <Link to="/client/dashboard" className="hidden md:flex items-center gap-2 group" title="My Dashboard">
                             {user.user_metadata?.custom_avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture ? (
                                 <img
                                     src={user.user_metadata.custom_avatar_url || user.user_metadata.avatar_url || user.user_metadata.picture}
@@ -125,23 +140,16 @@ export default function Header({ emergencyMode, setEmergencyMode }) {
                     ) : (
                         <Link
                             to="/login"
-                            className="hidden md:flex items-center gap-2 text-sm font-bold text-slate-600 hover:text-primary transition-colors px-3 py-2 rounded-lg hover:bg-slate-50 mr-1"
+                            className="hidden md:flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-primary transition-colors"
                         >
-                            <User size={18} className="text-primary" />
+                            <User size={18} />
                             <span>Sign In</span>
                         </Link>
                     )}
 
-                    {/* Emergency Toggle */}
-                    <button
-                        onClick={() => setEmergencyMode(!emergencyMode)}
-                        className={`hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-300 ${emergencyMode ? 'bg-red-600 border-red-500 text-white shadow-[0_0_15px_rgba(220,38,38,0.6)]' : 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-slate-200'}`}
-                    >
-                        <div className={`w-3 h-3 rounded-full transition-colors ${emergencyMode ? 'bg-white animate-pulse shadow-[0_0_8px_white]' : 'bg-slate-400'}`}></div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider">{emergencyMode ? 'EMERGENCY ACTIVE' : 'EMERGENCY MODE'}</span>
-                    </button>
-
-                    <Link to="/booking" className={`hidden md:flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold transition-all text-sm shadow-lg shadow-orange-500/20 hover:shadow-orange-500/40 hover:-translate-y-0.5 ${emergencyMode ? 'bg-white text-red-600 hover:bg-slate-50' : 'bg-accent text-white hover:bg-orange-600'}`}>
+                    {/* Start Repair Button */}
+                    <Link to="/booking" className={`hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full font-bold transition-all text-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 ${emergencyMode ? 'bg-white text-red-600' : 'bg-gradient-to-r from-orange-400 to-accent text-white'}`}>
+                        <span className="text-lg">🔧</span>
                         START REPAIR
                     </Link>
 
