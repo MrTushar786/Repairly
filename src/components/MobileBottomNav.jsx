@@ -43,35 +43,33 @@ export default function MobileBottomNav({ user }) {
                                 <item.icon size={24} className="text-white" strokeWidth={2.5} />
                             </div>
                         ) : (
-                        ): (
-                                <>
-                                <div className = {`p-1.5 rounded-full transition-all ${active ? 'bg-slate-100' : 'bg-transparent'}`}>
-                        {item.id === 'account' && user && (user.user_metadata?.custom_avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture) ? (
-                            <img
-                                src={user.user_metadata.custom_avatar_url || user.user_metadata.avatar_url || user.user_metadata.picture}
-                                alt="Profile"
-                                className={`w-[22px] h-[22px] rounded-full object-cover ${active ? 'ring-2 ring-primary ring-offset-1' : 'opacity-80'}`}
-                            />
-                        ) : (
-                            <item.icon
-                                size={22}
-                                className={`transition-colors duration-300 ${active ? 'text-primary' : 'text-slate-400 group-hover:text-slate-600'}`}
-                                strokeWidth={active ? 2.5 : 2}
-                                fill={active ? "currentColor" : "none"}
-                                fillOpacity={active ? 0.1 : 0}
-                            />
-                        )}
-                    </div>
+                            <>
+                                <div className={`p-1.5 rounded-full transition-all ${active ? 'bg-slate-100' : 'bg-transparent'}`}>
+                                    {item.id === 'account' && user && (user.user_metadata?.custom_avatar_url || user.user_metadata?.avatar_url || user.user_metadata?.picture) ? (
+                                        <img
+                                            src={user.user_metadata.custom_avatar_url || user.user_metadata.avatar_url || user.user_metadata.picture}
+                                            alt="Profile"
+                                            className={`w-[22px] h-[22px] rounded-full object-cover ${active ? 'ring-2 ring-primary ring-offset-1' : 'opacity-80'}`}
+                                        />
+                                    ) : (
+                                        <item.icon
+                                            size={22}
+                                            className={`transition-colors duration-300 ${active ? 'text-primary' : 'text-slate-400 group-hover:text-slate-600'}`}
+                                            strokeWidth={active ? 2.5 : 2}
+                                            fill={active ? "currentColor" : "none"}
+                                            fillOpacity={active ? 0.1 : 0}
+                                        />
+                                    )}
+                                </div>
                             </>
-    )
-}
+                        )}
 
-<span className={`text-[10px] font-bold tracking-tight transition-colors duration-300 ${active ? 'text-primary' : 'text-slate-400'} ${isRepair ? 'mt-1' : ''}`}>
-    {item.label}
-</span>
-                    </Link >
+                        <span className={`text-[10px] font-bold tracking-tight transition-colors duration-300 ${active ? 'text-primary' : 'text-slate-400'} ${isRepair ? 'mt-1' : ''}`}>
+                            {item.label}
+                        </span>
+                    </Link>
                 );
             })}
-        </nav >
+        </nav>
     );
 }
