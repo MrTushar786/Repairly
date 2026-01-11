@@ -39,7 +39,6 @@ export default function Contact() {
                     email: formState.email,
                     subject: formState.subject || 'General Inquiry',
                     message: formState.message,
-                    created_at: new Date(),
                     user_id: user?.id
                 }]);
 
@@ -48,8 +47,8 @@ export default function Contact() {
             alert('Support ticket created! We will respond shortly.');
             setFormState({ name: user?.user_metadata?.full_name || '', email: user?.email || '', subject: 'General Inquiry', message: '' });
         } catch (error) {
-            console.error('Error submitting ticket:', error);
-            alert('Failed to submit ticket. Please try again.');
+            console.error('Error submitting ticket:', error.message, error.details);
+            alert(`Failed to submit ticket: ${error.message}`);
         } finally {
             setIsSubmitting(false);
         }
