@@ -1,43 +1,22 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { SHOP_DATA, SERVICES, DEVICE_MODELS as STATIC_MODELS } from '../data';
+import { useShop } from '../context/ShopContext';
 import { Smartphone, Laptop, Gamepad2, Tablet, MapPin, ChevronRight, Search, CheckCircle2, ShieldCheck, Clock, BadgeDollarSign, Star, Menu, X, Loader2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getDeviceImageUrl } from '../lib/utils';
-import { supabase } from '../supabase';
-
-import { useNavigate } from 'react-router-dom';
 import HeroImage from '../assets/hero_repair_tech_1767953586419.png';
 import GenericLaptop from '../assets/generic_laptop_transparent_1767953633102.png';
 import GenericPhone from '../assets/generic_smartphone_1767953612029.png';
 
 export default function Home() {
     const navigate = useNavigate();
+    const { shopData, deviceModels } = useShop(); // Use Context
+
+    // Local state for layout
     const [selectedType, setSelectedType] = useState('');
     const [selectedModel, setSelectedModel] = useState({});
     const [searchResults, setSearchResults] = useState([]);
     const [modelImageError, setModelImageError] = useState(false);
-    const [deviceModels, setDeviceModels] = useState(STATIC_MODELS);
-
-    // Fetch Dynamic Models
-    React.useEffect(() => {
-        const fetchModels = async () => {
-            const { data: modelData } = await supabase.from('device_models').select('*');
-            if (modelData && modelData.length > 0) {
-                const merged = structuredClone(STATIC_MODELS);
-                modelData.forEach(m => {
-                    const { category, brand, model } = m;
-                    if (!merged[category]) merged[category] = {};
-                    if (!merged[category][brand]) merged[category][brand] = [];
-                    if (!merged[category][brand].includes(model)) {
-                        merged[category][brand].push(model);
-                    }
-                });
-                setDeviceModels(merged);
-            }
-        };
-        fetchModels();
-    }, []);
 
     // Reset error when model changes
     React.useEffect(() => {
@@ -303,10 +282,10 @@ export default function Home() {
                     <div className="flex flex-col md:flex-row items-end justify-between mb-10">
                         <div className="max-w-2xl">
                             <span className="text-primary font-bold tracking-widest uppercase text-xs mb-2 block">Visit Us</span>
-                            <h2 className="text-4xl font-bold text-secondary mb-4">{SHOP_DATA.name}</h2>
+                            <h2 className="text-4xl font-bold text-secondary mb-4">{shopData.name}</h2>
                             <p className="text-text-muted text-lg">Expert repairs in the heart of the city. Walk-ins welcome for all devices.</p>
                         </div>
-                        <a href={SHOP_DATA.mapLink} target="_blank" rel="noopener noreferrer" className="hidden md:flex items-center gap-2 text-primary font-bold hover:underline transition-all hover:gap-3">
+                        <a href={shopData.mapLink} target="_blank" rel="noopener noreferrer" className="hidden md:flex items-center gap-2 text-primary font-bold hover:underline transition-all hover:gap-3">
                             View Full Map <ChevronRight size={18} />
                         </a>
                     </div>
@@ -320,10 +299,10 @@ export default function Home() {
                             style={{ border: 0 }}
                             loading="lazy"
                             allowFullScreen
-                            src={SHOP_DATA.googleMapEmbed}
+                            src={shopData.googleMapEmbed}
                         ></iframe>
 
-                        {/* Scanner Line Overlay (Optional, keeping purely for tech vibe if desired, but might be distracting over a real map. Let's make it very subtle or remove. Keeping subtle.) */}
+                        {/* Scanner Line Overlay */}
                         <div className="absolute top-0 left-0 w-full h-full pointer-events-none bg-gradient-to-b from-transparent via-blue-500/5 to-transparent opacity-50"></div>
 
 
@@ -334,8 +313,8 @@ export default function Home() {
                                     <MapPin size={24} />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-secondary text-lg leading-tight mb-1">{SHOP_DATA.name}</h4>
-                                    <p className="text-sm text-text-muted font-medium mb-3">{SHOP_DATA.address.street}<br />{SHOP_DATA.address.city}, {SHOP_DATA.address.state} {SHOP_DATA.address.zip}</p>
+                                    <h4 className="font-bold text-secondary text-lg leading-tight mb-1">{shopData.name}</h4>
+                                    <p className="text-sm text-text-muted font-medium mb-3">{shopData.address.street}<br />{shopData.address.city}, {shopData.address.state} {shopData.address.zip}</p>
 
                                     <div className="flex items-center gap-2 mb-4">
                                         <span className="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[10px] font-bold uppercase tracking-wide flex items-center gap-1">
@@ -352,8 +331,6 @@ export default function Home() {
                             </div>
                         </div>
 
-
-
                         {/* Mobile View Map Button */}
                         <div className="absolute bottom-6 left-1/2 -translate-x-1/2 md:hidden">
                             <button className="px-6 py-2 bg-slate-800/80 backdrop-blur text-white text-xs font-bold uppercase tracking-wider rounded-full border border-slate-700 shadow-xl">
@@ -363,7 +340,7 @@ export default function Home() {
                     </div>
 
                     <div className="md:hidden mt-6 text-center">
-                        <a href={SHOP_DATA.mapLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 text-primary font-bold w-full p-4 bg-white rounded-xl shadow-sm border border-slate-100">
+                        <a href={shopData.mapLink} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 text-primary font-bold w-full p-4 bg-white rounded-xl shadow-sm border border-slate-100">
                             View Full Map <ChevronRight size={18} />
                         </a>
                     </div>
