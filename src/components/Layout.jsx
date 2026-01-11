@@ -5,22 +5,22 @@ import Footer from './Footer';
 import FloatingActions from './FloatingActions';
 
 export default function Layout() {
-    const [emergencyMode, setEmergencyMode] = useState(false);
+    const [darkMode, setDarkMode] = useState(false);
 
     // Toggle body class for global overrides if needed, or just scope to this div
     useEffect(() => {
-        if (emergencyMode) {
+        if (darkMode) {
             document.documentElement.classList.add('emergency-active');
         } else {
             document.documentElement.classList.remove('emergency-active');
         }
-    }, [emergencyMode]);
+    }, [darkMode]);
 
     return (
-        <div className={`min-h-screen transition-colors duration-500 ${emergencyMode ? 'bg-red-950' : ''}`}>
-            <Header emergencyMode={emergencyMode} setEmergencyMode={setEmergencyMode} />
+        <div className={`min-h-screen transition-colors duration-500`}>
+            <Header darkMode={darkMode} setDarkMode={setDarkMode} />
             <main>
-                <Outlet context={{ emergencyMode }} />
+                <Outlet context={{ darkMode }} />
             </main>
             <Footer />
             <FloatingActions />

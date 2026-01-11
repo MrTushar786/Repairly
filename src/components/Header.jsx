@@ -5,7 +5,7 @@ import { SHOP_DATA } from '../data';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
 
-export default function Header({ emergencyMode, setEmergencyMode }) {
+export default function Header({ darkMode, setDarkMode }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
@@ -108,17 +108,17 @@ export default function Header({ emergencyMode, setEmergencyMode }) {
 
                 <div className="flex gap-6 items-center">
 
-                    {/* Emergency Toggle */}
+                    {/* Dark Mode Toggle */}
                     <div className="hidden lg:flex items-center gap-3">
                         <button
-                            onClick={() => setEmergencyMode(!emergencyMode)}
-                            className={`relative w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none ${emergencyMode ? 'bg-red-600' : 'bg-slate-300'}`}
-                            aria-label="Toggle Emergency Mode"
+                            onClick={() => setDarkMode(!darkMode)}
+                            className={`relative w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none ${darkMode ? 'bg-slate-700' : 'bg-slate-300'}`}
+                            aria-label="Toggle Dark Mode"
                         >
-                            <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-300 ${emergencyMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                            <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-300 ${darkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
                         </button>
-                        <span className={`text-xs font-bold uppercase tracking-wider ${emergencyMode ? 'text-red-600 animate-pulse' : 'text-slate-400'}`}>
-                            Emergency Mode
+                        <span className={`text-xs font-bold uppercase tracking-wider ${darkMode ? 'text-white' : 'text-slate-400'}`}>
+                            Dark Mode
                         </span>
                     </div>
 
