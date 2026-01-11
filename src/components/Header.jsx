@@ -162,9 +162,22 @@ export default function Header({ darkMode, setDarkMode }) {
 
             {/* Mobile Menu */}
             {menuOpen && (
-                <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-100 p-6 flex flex-col gap-4 shadow-xl">
-                    <Link to="/services" className="text-lg font-bold text-secondary" onClick={() => setMenuOpen(false)}>Repairs</Link>
-                    <Link to="/about" className="text-lg font-bold text-secondary" onClick={() => setMenuOpen(false)}>Locations</Link>
+                <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-100 p-6 flex flex-col gap-4 shadow-xl max-h-[80vh] overflow-y-auto">
+                    <Link to="/services" className="text-lg font-bold text-secondary" onClick={() => setMenuOpen(false)}>Services</Link>
+                    <Link to="/booking" className="text-lg font-bold text-secondary" onClick={() => setMenuOpen(false)}>Device Repair</Link>
+                    <Link to="/about" className="text-lg font-bold text-secondary" onClick={() => setMenuOpen(false)}>About</Link>
+                    <Link to="/contact" className="text-lg font-bold text-secondary" onClick={() => setMenuOpen(false)}>Contact Us</Link>
+
+                    {/* Mobile Dark Mode Toggle */}
+                    <div className="flex items-center justify-between py-2 border-y border-slate-50/50 my-2">
+                        <span className="text-lg font-bold text-secondary">Dark Mode</span>
+                        <button
+                            onClick={() => setDarkMode(!darkMode)}
+                            className={`relative w-12 h-6 rounded-full transition-colors duration-300 focus:outline-none ${darkMode ? 'bg-slate-700' : 'bg-slate-300'}`}
+                        >
+                            <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full shadow-sm transition-transform duration-300 ${darkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                        </button>
+                    </div>
 
                     {user ? (
                         <>
@@ -172,10 +185,10 @@ export default function Header({ darkMode, setDarkMode }) {
                             <button onClick={handleLogout} className="text-lg font-bold text-red-500 text-left">Sign Out</button>
                         </>
                     ) : (
-                        <Link to="/login" className="text-lg font-bold text-slate-500" onClick={() => setMenuOpen(false)}>Client Login</Link>
+                        <Link to="/login" className="text-lg font-bold text-slate-500" onClick={() => setMenuOpen(false)}>Sign In</Link>
                     )}
 
-                    <Link to="/booking" className="bg-accent text-white py-3 text-center rounded-lg font-bold" onClick={() => setMenuOpen(false)}>Start Repair</Link>
+                    <Link to="/booking" className="bg-accent text-white py-3 text-center rounded-full font-bold shadow-lg" onClick={() => setMenuOpen(false)}>Start Repair</Link>
                 </div>
             )}
         </header>

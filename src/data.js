@@ -3,12 +3,12 @@ export const SHOP_DATA = {
     branding: {
         namePrefix: "MR.",
         nameHighlight: "FIX MY PHONE",
-        subDetails: "Tech Triage Unit",
-        logoText: "MR. FIX MY PHONE", // Fallback
+        subDetails: "Repair Support Team",
+        logoText: "MR. FIX MY PHONE", 
     },
     tagline: "When your tech stops working, we start.",
     area: "Global Network",
-    phone: "18005550199", // Clean number for tel: links
+    phone: "18005550199", 
     displayPhone: "18005550199",
     whatsapp: "18005550199",
     email: "help@mrfixmyphone.com",
@@ -20,9 +20,9 @@ export const SHOP_DATA = {
         full: "267 5th Ave Suite# 106, LL1, New York, NY 10016"
     },
     topFeatures: [
-        "🇺🇸 700+ Locations Nationwide",
-        "Authorized Samsung Service Provider",
-        "Free Diagnostics on All Repairs"
+        "Free Diagnostics on All Repairs",
+        "Authorized Service Provider",
+        "Trained & Certified Technicians"
     ],
     socials: {
         facebook: "#",
