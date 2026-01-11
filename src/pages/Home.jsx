@@ -7,6 +7,9 @@ import { getDeviceImageUrl } from '../lib/utils';
 import { supabase } from '../supabase';
 
 import { useNavigate } from 'react-router-dom';
+import HeroImage from '../assets/hero_repair_tech_1767953586419.png';
+import GenericLaptop from '../assets/generic_laptop_transparent_1767953633102.png';
+import GenericPhone from '../assets/generic_smartphone_1767953612029.png';
 
 export default function Home() {
     const navigate = useNavigate();
@@ -56,7 +59,7 @@ export default function Home() {
             {/* HERO: The Tech Triage Unit */}
             <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
                 <div className="absolute inset-0 z-0">
-                    <img src="/src/assets/hero_repair_tech_1767953586419.png" className="w-full h-full object-cover" alt="Tech Repair Workbench" />
+                    <img src={HeroImage} className="w-full h-full object-cover" alt="Tech Repair Workbench" />
                     <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 to-slate-900/40"></div>
                 </div>
                 <div className="container mx-auto px-4 max-w-7xl relative z-10 text-white">
@@ -269,7 +272,7 @@ export default function Home() {
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
 
                                 <img
-                                    src={!modelImageError ? modelImageUrl : (selectedType === 'Laptop' ? "/src/assets/generic_laptop_transparent_1767953633102.png" : "/src/assets/generic_smartphone_1767953612029.png")}
+                                    src={!modelImageError ? modelImageUrl : (selectedType === 'Laptop' ? GenericLaptop : GenericPhone)}
                                     alt={selectedModel.model}
                                     className="w-full h-full object-contain relative z-10 transition-transform group-hover:scale-110 duration-500"
                                     onError={(e) => {
