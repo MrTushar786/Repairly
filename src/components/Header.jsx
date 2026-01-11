@@ -148,13 +148,13 @@ export default function Header({ darkMode, setDarkMode }) {
                     )}
 
                     {/* Start Repair Button */}
-                    <Link to="/booking" className={`hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full font-bold transition-all text-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 ${emergencyMode ? 'bg-white text-red-600' : 'bg-gradient-to-r from-orange-400 to-accent text-white'}`}>
+                    <Link to="/booking" className={`hidden md:flex items-center gap-2 px-6 py-2.5 rounded-full font-bold transition-all text-sm shadow-lg hover:shadow-xl hover:-translate-y-0.5 bg-gradient-to-r from-orange-400 to-accent text-white`}>
                         <span className="text-lg">🔧</span>
                         START REPAIR
                     </Link>
 
                     {/* Mobile Menu Toggle */}
-                    <button className={`md:hidden ${emergencyMode ? 'text-red-500' : 'text-secondary'}`} onClick={() => setMenuOpen(!menuOpen)}>
+                    <button className="md:hidden text-secondary" onClick={() => setMenuOpen(!menuOpen)}>
                         {menuOpen ? <X size={28} /> : <Menu size={28} />}
                     </button>
                 </div>
