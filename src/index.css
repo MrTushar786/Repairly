@@ -20,6 +20,9 @@
     body {
         @apply bg-bg-body text-text-main antialiased selection:bg-primary selection:text-white;
     }
+    button, [role="button"], input[type="submit"], input[type="reset"], input[type="button"], select {
+        cursor: pointer;
+    }
 }
 
 @keyframes scan {
