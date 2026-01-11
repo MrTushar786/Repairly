@@ -19,6 +19,11 @@ export const SHOP_DATA = {
         zip: "10016",
         full: "267 5th Ave Suite# 106, LL1, New York, NY 10016"
     },
+    topFeatures: [
+        "🇺🇸 700+ Locations Nationwide",
+        "Authorized Samsung Service Provider",
+        "Free Diagnostics on All Repairs"
+    ],
     socials: {
         facebook: "#",
         twitter: "#",

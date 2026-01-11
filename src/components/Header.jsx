@@ -48,11 +48,12 @@ export default function Header({ emergencyMode, setEmergencyMode }) {
 
             {/* Top Bar for Desktop */}
             <div className="hidden md:flex bg-secondary text-white text-xs py-2 justify-center gap-6 font-semibold tracking-wide">
-                <span>🇺🇸 700+ Locations Nationwide</span>
-                <span>•</span>
-                <span>Authorized Samsung Service Provider</span>
-                <span>•</span>
-                <span>Free Diagnostics on All Repairs</span>
+                {SHOP_DATA.topFeatures.map((feature, index) => (
+                    <React.Fragment key={index}>
+                        <span>{feature}</span>
+                        {index < SHOP_DATA.topFeatures.length - 1 && <span>•</span>}
+                    </React.Fragment>
+                ))}
             </div>
 
             <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
