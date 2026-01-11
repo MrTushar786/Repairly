@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../supabase';
 import { useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Calendar, MessageSquare, LogOut, Trash2, Clock, Smartphone, User, TrendingUp, DollarSign, Users, Activity, Mail, Plus, Edit2, Battery, Droplets, Usb, Disc, Wrench, Cpu, Wifi, Camera, Speaker, X, Image as ImageIcon, Database, Laptop, Gamepad2, Tablet, Menu, Layers, Phone, Save, Settings, AlertTriangle } from 'lucide-react';
+import { LayoutDashboard, Calendar, MessageSquare, LogOut, Trash2, Clock, Smartphone, User, TrendingUp, DollarSign, Users, Activity, Mail, Plus, Edit2, Battery, Droplets, Usb, Disc, Wrench, Cpu, Wifi, Camera, Speaker, X, Image as ImageIcon, Database, Laptop, Gamepad2, Tablet, Menu, Layers, Phone, Save, Settings, AlertTriangle, Power, Store } from 'lucide-react';
 import { DEVICE_MODELS } from '../../data';
 import { useShop } from '../../context/ShopContext';
 
@@ -27,7 +27,7 @@ export default function AdminDashboard() {
 
     useEffect(() => {
         if (shopData) {
-            setSettingsForm(shopData);
+            setSettingsForm({ ...shopData, isOpen: shopData.isOpen !== false }); // Default to true if undefined
         }
     }, [shopData]);
 
@@ -1052,9 +1052,43 @@ export default function AdminDashboard() {
                                 >
                                     <Save size={18} /> Save Changes
                                 </button>
+
                             </div>
 
                             <div className="space-y-6 md:space-y-8">
+                                {/* Shop Operation Status */}
+                                <section className="bg-slate-50 border border-slate-200 rounded-xl p-6 relative overflow-hidden">
+                                    <div className={`absolute top-0 right-0 p-32 rounded-full -mr-16 -mt-16 transition-colors duration-500 ${settingsForm.isOpen ? 'bg-green-100/50' : 'bg-red-100/50'}`}></div>
+                                    <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                                        <div>
+                                            <h3 className="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                                <Store size={20} className={settingsForm.isOpen ? 'text-green-600' : 'text-red-500'} />
+                                                Shop Status: <span className={settingsForm.isOpen ? 'text-green-600' : 'text-red-600'}>{settingsForm.isOpen ? 'OPEN FOR BUSINESS' : 'TEMPORARILY CLOSED'}</span>
+                                            </h3>
+                                            <p className="text-sm text-slate-500 max-w-md">
+                                                {settingsForm.isOpen
+                                                    ? "Your shop is currently marked as open. Customers can see you are available."
+                                                    : "Your shop is marked as closed. A 'Closed' badge will appear on the website."}
+                                            </p>
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                            <div className="flex bg-white rounded-lg p-1 border border-slate-200 shadow-sm">
+                                                <button
+                                                    onClick={() => setSettingsForm({ ...settingsForm, isOpen: true })}
+                                                    className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${settingsForm.isOpen ? 'bg-green-500 text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
+                                                >
+                                                    OPEN
+                                                </button>
+                                                <button
+                                                    onClick={() => setSettingsForm({ ...settingsForm, isOpen: false })}
+                                                    className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${!settingsForm.isOpen ? 'bg-red-500 text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
+                                                >
+                                                    CLOSED
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
                                 {/* General Info */}
                                 <section>
                                     <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
@@ -1221,17 +1255,19 @@ export default function AdminDashboard() {
                             </div>
                         </div>
                     </div>
-                )}
-                {showSqlModal && (
-                    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
-                        <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl relative">
-                            <button onClick={() => setShowSqlModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><X size={24} /></button>
-                            <h3 className="text-xl font-bold text-slate-800 mb-4">Database Setup</h3>
-                            <p className="text-slate-500 mb-4">Run this SQL in your Supabase SQL Editor to create the necessary tables.</p>
+                )
+                }
+                {
+                    showSqlModal && (
+                        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                            <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl relative">
+                                <button onClick={() => setShowSqlModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><X size={24} /></button>
+                                <h3 className="text-xl font-bold text-slate-800 mb-4">Database Setup</h3>
+                                <p className="text-slate-500 mb-4">Run this SQL in your Supabase SQL Editor to create the necessary tables.</p>
 
-                            <div className="bg-slate-900 rounded-xl p-4 overflow-x-auto mb-6 relative group">
-                                <pre className="text-emerald-400 font-mono text-sm leading-relaxed">
-                                    {`-- 1. Create Device Models Table
+                                <div className="bg-slate-900 rounded-xl p-4 overflow-x-auto mb-6 relative group">
+                                    <pre className="text-emerald-400 font-mono text-sm leading-relaxed">
+                                        {`-- 1. Create Device Models Table
 create table if not exists device_models (
   id uuid default gen_random_uuid() primary key,
   category text,
@@ -1262,10 +1298,10 @@ create table if not exists site_settings (
 alter table site_settings enable row level security;
 create policy "Public Read" on site_settings for select using (true);
 create policy "Admin Write" on site_settings for all to authenticated using (true);`}
-                                </pre>
-                                <button
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(`create table if not exists device_models (
+                                    </pre>
+                                    <button
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(`create table if not exists device_models (
                                 id uuid default gen_random_uuid() primary key,
                                 category text,
                                 brand text,
@@ -1284,68 +1320,70 @@ create policy "Admin Write" on site_settings for all to authenticated using (tru
                                 alter table service_menu_items enable row level security;
                                 create policy "Public Read" on service_menu_items for select using (true);
                                 create policy "Admin Write" on service_menu_items for all to authenticated using (true);`);
-                                        alert("Copied to clipboard!");
-                                    }}
-                                    className="absolute top-2 right-2 bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                                >
-                                    Copy SQL
-                                </button>
-                            </div>
+                                            alert("Copied to clipboard!");
+                                        }}
+                                        className="absolute top-2 right-2 bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        Copy SQL
+                                    </button>
+                                </div>
 
-                            <div className="flex justify-end">
-                                <button onClick={() => setShowSqlModal(false)} className="px-6 py-2 bg-slate-100 text-slate-600 font-bold rounded-lg hover:bg-slate-200">Close</button>
+                                <div className="flex justify-end">
+                                    <button onClick={() => setShowSqlModal(false)} className="px-6 py-2 bg-slate-100 text-slate-600 font-bold rounded-lg hover:bg-slate-200">Close</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )
+                    )
                 }
             </main >
 
             {/* Delete Confirmation Modal */}
             {/* Delete Confirmation Popover */}
-            {deleteConfirm.show && deleteConfirm.position && (
-                <>
-                    {/* Transparent backdrop to close on click outside */}
-                    <div
-                        className="fixed inset-0 z-[90] bg-transparent"
-                        onClick={() => setDeleteConfirm({ ...deleteConfirm, show: false })}
-                    ></div>
+            {
+                deleteConfirm.show && deleteConfirm.position && (
+                    <>
+                        {/* Transparent backdrop to close on click outside */}
+                        <div
+                            className="fixed inset-0 z-[90] bg-transparent"
+                            onClick={() => setDeleteConfirm({ ...deleteConfirm, show: false })}
+                        ></div>
 
-                    <div
-                        className="absolute z-[100] bg-white rounded-2xl shadow-2xl p-6 w-80 border border-slate-100 animate-in fade-in zoom-in-95 duration-200"
-                        style={{
-                            top: deleteConfirm.position.top,
-                            right: deleteConfirm.position.right
-                        }}
-                    >
-                        <div className="flex flex-col items-center text-center">
-                            <div className="w-12 h-12 bg-red-100 text-red-500 rounded-full flex items-center justify-center mb-3">
-                                <AlertTriangle size={24} />
+                        <div
+                            className="absolute z-[100] bg-white rounded-2xl shadow-2xl p-6 w-80 border border-slate-100 animate-in fade-in zoom-in-95 duration-200"
+                            style={{
+                                top: deleteConfirm.position.top,
+                                right: deleteConfirm.position.right
+                            }}
+                        >
+                            <div className="flex flex-col items-center text-center">
+                                <div className="w-12 h-12 bg-red-100 text-red-500 rounded-full flex items-center justify-center mb-3">
+                                    <AlertTriangle size={24} />
+                                </div>
+                                <h3 className="text-lg font-black text-slate-800 mb-1">Confirm Delete</h3>
+                                <p className="text-slate-500 text-xs mb-4 leading-relaxed">
+                                    Permanently remove this item?
+                                </p>
+                                <div className="flex gap-2 w-full">
+                                    <button
+                                        onClick={() => setDeleteConfirm({ ...deleteConfirm, show: false })}
+                                        className="flex-1 py-2 text-slate-500 font-bold hover:bg-slate-50 rounded-lg transition-colors text-sm"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={confirmDelete}
+                                        className="flex-1 py-2 bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 shadow-md shadow-red-100 transition-colors text-sm"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
-                            <h3 className="text-lg font-black text-slate-800 mb-1">Confirm Delete</h3>
-                            <p className="text-slate-500 text-xs mb-4 leading-relaxed">
-                                Permanently remove this item?
-                            </p>
-                            <div className="flex gap-2 w-full">
-                                <button
-                                    onClick={() => setDeleteConfirm({ ...deleteConfirm, show: false })}
-                                    className="flex-1 py-2 text-slate-500 font-bold hover:bg-slate-50 rounded-lg transition-colors text-sm"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={confirmDelete}
-                                    className="flex-1 py-2 bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 shadow-md shadow-red-100 transition-colors text-sm"
-                                >
-                                    Delete
-                                </button>
-                            </div>
+                            {/* Little arrow pointing to the right (towards the button) */}
+                            <div className="absolute top-8 -right-2 w-4 h-4 bg-white rotate-45 border-t border-r border-slate-100"></div>
                         </div>
-                        {/* Little arrow pointing to the right (towards the button) */}
-                        <div className="absolute top-8 -right-2 w-4 h-4 bg-white rotate-45 border-t border-r border-slate-100"></div>
-                    </div>
-                </>
-            )}
+                    </>
+                )
+            }
         </div >
     );
 }

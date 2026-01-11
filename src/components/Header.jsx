@@ -1,15 +1,16 @@
 
 import React, { useState } from 'react';
-import { Phone, MessageCircle, Menu, MapPin, X, ChevronDown, LogOut, User } from 'lucide-react';
-import { SHOP_DATA } from '../data';
+import { Phone, MessageCircle, Menu, MapPin, X, ChevronDown, LogOut, User, Clock } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
+import { useShop } from '../context/ShopContext';
 
 export default function Header({ darkMode, setDarkMode }) {
     const [menuOpen, setMenuOpen] = useState(false);
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
     const [servicesList, setServicesList] = useState([]);
+    const { shopData } = useShop();
 
     // Check login status
     React.useEffect(() => {
@@ -46,22 +47,31 @@ export default function Header({ darkMode, setDarkMode }) {
     return (
         <header className="fixed w-full top-0 z-50 bg-white shadow-sm transition-all duration-300">
 
-            {/* Top Bar for Desktop */}
-            <div className="hidden md:flex bg-secondary text-white text-xs py-2 justify-center gap-6 font-semibold tracking-wide">
-                {SHOP_DATA.topFeatures.map((feature, index) => (
+            {/* Shop Status Banner - Closed */}
+            {shopData.isOpen === false && (
+                <div className="bg-red-600 text-white text-xs md:text-sm font-bold py-2 text-center animate-pulse tracking-wide flex items-center justify-center gap-2">
+                    <Clock size={16} />
+                    <span>WORKSHOP IS CURRENTLY CLOSED</span>
+                    <span className="hidden md:inline font-normal opacity-80">- You can still schedule repairs for later!</span>
+                </div>
+            )}
+
+            {/* Top Bar for Desktop (Only show if Open, or keep stacked?) -> Let's keep it stacked but maybe hide if closed to reduce clutter? No, keep features. */}
+            < div className="hidden md:flex bg-secondary text-white text-xs py-2 justify-center gap-6 font-semibold tracking-wide" >
+                {shopData.topFeatures.map((feature, index) => (
                     <React.Fragment key={index}>
                         <span>{feature}</span>
-                        {index < SHOP_DATA.topFeatures.length - 1 && <span>•</span>}
+                        {index < shopData.topFeatures.length - 1 && <span>•</span>}
                     </React.Fragment>
                 ))}
-            </div>
+            </div >
 
             <div className="container mx-auto px-4 h-16 md:h-20 flex items-center justify-between">
                 <Link to="/" className="flex flex-col leading-none group">
                     <span className="text-2xl font-black text-primary tracking-tighter uppercase group-hover:opacity-90 transition-opacity">
-                        {SHOP_DATA.branding.namePrefix} <span className="text-secondary">{SHOP_DATA.branding.nameHighlight}</span>
+                        {shopData.branding.namePrefix} <span className="text-secondary">{shopData.branding.nameHighlight}</span>
                     </span>
-                    <span className="text-[10px] font-bold text-text-muted tracking-[0.2em] uppercase">{SHOP_DATA.branding.subDetails}</span>
+                    <span className="text-[10px] font-bold text-text-muted tracking-[0.2em] uppercase">{shopData.branding.subDetails}</span>
                 </Link>
 
                 {/* Desktop Nav */}
