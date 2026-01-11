@@ -16,33 +16,29 @@ export function ShopProvider({ children }) {
     const fetchSettings = async () => {
         try {
             // Fetch General Shop Data
-            const { data: generalSettings } = await supabase
+            const { data: generalSettings, error: generalError } = await supabase
                 .from('site_settings')
                 .select('value')
                 .eq('key', 'general')
-                .single();
+                .maybeSingle();
 
-            if (generalSettings?.value) {
-                // Merge with defaults to ensure all fields exist
+            if (!generalError && generalSettings?.value) {
                 setShopData((prev) => ({ ...prev, ...generalSettings.value }));
             }
 
             // Fetch Services Data
-            // We can also store services in 'site_settings' with key 'services'
-            // OR use the existing 'repair_services' table if preferred.
-            // Based on user request to edit the specific SERVICES array structure:
-            const { data: servicesSettings } = await supabase
+            const { data: servicesSettings, error: servicesError } = await supabase
                 .from('site_settings')
                 .select('value')
                 .eq('key', 'services')
-                .single();
+                .maybeSingle();
 
-            if (servicesSettings?.value) {
+            if (!servicesError && servicesSettings?.value) {
                 setServicesData(servicesSettings.value);
             }
 
         } catch (error) {
-            console.error('Error fetching site settings:', error);
+            // console.warn('Supabase not fully configured yet:', error);
         } finally {
             setLoading(false);
         }

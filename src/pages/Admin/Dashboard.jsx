@@ -1045,7 +1045,12 @@ export default function AdminDashboard() {
                                             await updateShopData(settingsForm);
                                             alert('Settings saved successfully!');
                                         } catch (error) {
-                                            alert('Error saving settings: ' + error.message);
+                                            if (error.message.includes('Could not find the table') || error.message.includes('relation "public.site_settings" does not exist')) {
+                                                alert("Table Missing! \n\nIt looks like the 'site_settings' table hasn't been created yet. \n\nI will open the Database Setup modal for you. Please copy the SQL and run it in Supabase.");
+                                                setShowSqlModal(true);
+                                            } else {
+                                                alert('Error saving settings: ' + error.message);
+                                            }
                                         }
                                     }}
                                     className="w-full md:w-auto px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 flex items-center justify-center gap-2"
@@ -1267,7 +1272,7 @@ export default function AdminDashboard() {
 
                                 <div className="bg-slate-900 rounded-xl p-4 overflow-x-auto mb-6 relative group">
                                     <pre className="text-emerald-400 font-mono text-sm leading-relaxed">
-                                        {`-- 1. Create Device Models Table
+                                        {`-- 1. Device Models
 create table if not exists device_models (
   id uuid default gen_random_uuid() primary key,
   category text,
@@ -1276,50 +1281,74 @@ create table if not exists device_models (
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
 alter table device_models enable row level security;
+drop policy if exists "Public Read" on device_models;
 create policy "Public Read" on device_models for select using (true);
+drop policy if exists "Admin Write" on device_models;
 create policy "Admin Write" on device_models for all to authenticated using (true);
 
--- 2. Create Services Menu Table (if missing)
+-- 2. Service Menu Items
 create table if not exists service_menu_items (
   id uuid default gen_random_uuid() primary key,
   label text not null,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 alter table service_menu_items enable row level security;
+drop policy if exists "Public Read" on service_menu_items;
 create policy "Public Read" on service_menu_items for select using (true);
+drop policy if exists "Admin Write" on service_menu_items;
 create policy "Admin Write" on service_menu_items for all to authenticated using (true);
 
--- 3. Create Site Settings Table
+-- 3. Site Settings (REQUIRED FOR SHOP STATUS)
 create table if not exists site_settings (
   key text primary key,
   value jsonb,
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
 alter table site_settings enable row level security;
+drop policy if exists "Public Read" on site_settings;
 create policy "Public Read" on site_settings for select using (true);
+drop policy if exists "Admin Write" on site_settings;
 create policy "Admin Write" on site_settings for all to authenticated using (true);`}
                                     </pre>
                                     <button
                                         onClick={() => {
-                                            navigator.clipboard.writeText(`create table if not exists device_models (
-                                id uuid default gen_random_uuid() primary key,
-                                category text,
-                                brand text,
-                                model text,
-                                created_at timestamp with time zone default timezone('utc'::text, now())
-                                );
-                                alter table device_models enable row level security;
-                                create policy "Public Read" on device_models for select using (true);
-                                create policy "Admin Write" on device_models for all to authenticated using (true);
+                                            navigator.clipboard.writeText(`-- 1. Device Models
+create table if not exists device_models (
+  id uuid default gen_random_uuid() primary key,
+  category text,
+  brand text,
+  model text,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+alter table device_models enable row level security;
+drop policy if exists "Public Read" on device_models;
+create policy "Public Read" on device_models for select using (true);
+drop policy if exists "Admin Write" on device_models;
+create policy "Admin Write" on device_models for all to authenticated using (true);
 
-                                create table if not exists service_menu_items (
-                                id uuid default gen_random_uuid() primary key,
-                                label text not null,
-                                created_at timestamp with time zone default timezone('utc'::text, now()) not null
-                                );
-                                alter table service_menu_items enable row level security;
-                                create policy "Public Read" on service_menu_items for select using (true);
-                                create policy "Admin Write" on service_menu_items for all to authenticated using (true);`);
+-- 2. Service Menu Items
+create table if not exists service_menu_items (
+  id uuid default gen_random_uuid() primary key,
+  label text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+alter table service_menu_items enable row level security;
+drop policy if exists "Public Read" on service_menu_items;
+create policy "Public Read" on service_menu_items for select using (true);
+drop policy if exists "Admin Write" on service_menu_items;
+create policy "Admin Write" on service_menu_items for all to authenticated using (true);
+
+-- 3. Site Settings (REQUIRED FOR SHOP STATUS)
+create table if not exists site_settings (
+  key text primary key,
+  value jsonb,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+alter table site_settings enable row level security;
+drop policy if exists "Public Read" on site_settings;
+create policy "Public Read" on site_settings for select using (true);
+drop policy if exists "Admin Write" on site_settings;
+create policy "Admin Write" on site_settings for all to authenticated using (true);`);
                                             alert("Copied to clipboard!");
                                         }}
                                         className="absolute top-2 right-2 bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity"
