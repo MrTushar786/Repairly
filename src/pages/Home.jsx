@@ -58,7 +58,7 @@ export default function Home() {
                                 <input
                                     type="text"
                                     placeholder="Type device (e.g. 'iPhone 13')"
-                                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-white/10 bg-white/5 backdrop-blur-md text-white placeholder:text-slate-400 focus:border-primary focus:ring-4 focus:ring-primary/20 outline-none text-lg font-bold shadow-lg transition-all"
+                                    className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-white/10 bg-white/5 backdrop-blur-md text-white placeholder:text-slate-400 focus:border-primary focus:ring-4 focus:ring-primary/20 outline-none text-lg font-bold shadow-none md:shadow-lg transition-all"
                                     onChange={(e) => {
                                         const query = e.target.value.toLowerCase();
                                         if (query.length > 1) {
@@ -104,13 +104,13 @@ export default function Home() {
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <button
                                 onClick={() => navigate('/booking')}
-                                className="w-full sm:w-auto px-8 py-4 bg-accent text-white font-bold rounded-lg hover:bg-orange-600 transition-colors shadow-lg shadow-orange-200"
+                                className="w-full sm:w-auto px-8 py-4 bg-accent text-white font-bold rounded-lg hover:bg-orange-600 transition-colors shadow-none"
                             >
                                 START A REPAIR
                             </button>
                             <button
                                 onClick={() => document.getElementById('store-locator').scrollIntoView({ behavior: 'smooth' })}
-                                className="w-full sm:w-auto px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-bold rounded-lg border border-white/20 hover:bg-white hover:text-black hover:border-white transition-colors flex items-center justify-center gap-2"
+                                className="w-full sm:w-auto px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-bold rounded-lg border border-white/20 hover:bg-white hover:text-black hover:border-white transition-colors flex items-center justify-center gap-2 shadow-none"
                             >
                                 <MapPin size={18} /> FIND A STORE
                             </button>
@@ -142,14 +142,7 @@ export default function Home() {
             </section>
 
             {/* TRUST SIGNALS: The Hall of Fame */}
-            <section className="py-12 border-b border-slate-200 bg-white">
-                <div className="container mx-auto px-4 max-w-7xl flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
-                    {/* Mock Partners - In real site use logos */}
-                    <span className="text-xl font-bold flex items-center gap-2 text-secondary"><div className="w-6 h-6 bg-black rounded-full"></div> Apple Independent Provider</span>
-                    <span className="text-xl font-bold flex items-center gap-2 text-secondary"><div className="w-6 h-6 bg-blue-600 rounded-full"></div> Samsung Authorized</span>
-                    <span className="text-xl font-bold flex items-center gap-2 text-secondary"><div className="w-6 h-6 bg-red-500 rounded-full"></div> Google Authorized</span>
-                </div>
-            </section>
+
 
             {/* FOUR PILLARS: Guarantees */}
             <section className="py-24 bg-white">

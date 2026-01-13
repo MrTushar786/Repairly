@@ -73,7 +73,7 @@ export default function Header({ darkMode, setDarkMode }) {
                 </Link>
 
                 {/* Desktop Nav */}
-                <nav className="hidden lg:flex items-center gap-4">
+                <nav className="hidden lg:flex items-center gap-8">
 
                     {/* Services Dropdown */}
                     <div className="relative group">
@@ -94,26 +94,12 @@ export default function Header({ darkMode, setDarkMode }) {
                     </div>
 
                     {/* Device Repair Dropdown */}
-                    <div className="relative group">
-                        <Link to="/booking" className="flex items-center gap-1 text-sm font-bold text-secondary hover:text-primary transition-colors py-4">
-                            DEVICE REPAIR <ChevronDown size={14} className="group-hover:rotate-180 transition-transform" />
-                        </Link>
-                        <div className="absolute top-full -left-4 w-64 bg-white rounded-xl shadow-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 border border-slate-100">
-                            {[
-                                'iPhone Repair', 'Samsung Repair', 'Google Pixel Repair', 'iPad & Tablet Repair',
-                                'MacBook Repair', 'Computer & Laptop', 'Game Console Repair'
-                            ].map((item) => (
-                                <Link key={item} to="/booking" className="block px-6 py-3 text-sm font-semibold text-text-muted hover:text-primary hover:bg-slate-50 transition-colors">
-                                    {item}
-                                </Link>
-                            ))}
-                        </div>
-                    </div>
 
 
                     <Link to="/shop" className="text-sm font-bold text-secondary hover:text-primary transition-colors flex items-center gap-1">
                         SHOP <span className="bg-orange-500 text-white text-[9px] px-1.5 py-0.5 rounded-full animate-pulse">NEW</span>
                     </Link>
+
                     <Link to="/about" className="text-sm font-bold text-secondary hover:text-primary transition-colors">ABOUT</Link>
                     <Link to="/contact" className="text-sm font-bold text-secondary hover:text-primary transition-colors">CONTACT US</Link>
                 </nav>
@@ -156,7 +142,7 @@ export default function Header({ darkMode, setDarkMode }) {
                     )}
 
                     {/* Start Repair Button */}
-                    <Link to="/booking" className={`hidden lg:flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all text-sm shadow-lg shadow-orange-200/50 hover:shadow-orange-300/50 hover:-translate-y-0.5 bg-gradient-to-r from-orange-500 to-red-500 text-white`}>
+                    <Link to="/booking" className={`hidden lg:flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all text-sm hover:-translate-y-0.5 bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-none`}>
                         <Wrench size={16} className="text-white/90" />
                         START REPAIR
                     </Link>

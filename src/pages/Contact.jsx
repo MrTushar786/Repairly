@@ -61,14 +61,14 @@ export default function Contact() {
     ];
 
     return (
-        <div className="pt-32 pb-40 lg:pt-48 bg-white min-h-screen overflow-hidden">
-            <div className="container mx-auto px-4 max-w-6xl">
+        <div className="pt-24 pb-20 lg:pt-32 bg-white min-h-screen overflow-hidden">
+            <div className="container mx-auto px-4 max-w-5xl">
 
                 {/* Hero Section */}
-                <div className="text-center mb-20 relative">
+                <div className="text-center mb-12 relative">
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-blue-100 rounded-full blur-3xl opacity-30 -z-10"></div>
                     <span className="text-primary font-bold tracking-widest uppercase text-xs mb-3 block">24/7 Support</span>
-                    <h1 className="text-5xl md:text-7xl font-black text-secondary mb-6 tracking-tight">
+                    <h1 className="text-4xl md:text-5xl font-black text-secondary mb-6 tracking-tight">
                         We're Here to <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">Help</span>.
                     </h1>
                     <p className="text-text-muted text-xl max-w-2xl mx-auto leading-relaxed">
@@ -76,7 +76,7 @@ export default function Contact() {
                     </p>
                 </div>
 
-                <div className="grid lg:grid-cols-12 gap-12">
+                <div className="grid lg:grid-cols-12 gap-8">
 
                     {/* Left Column: Contact Info & Map */}
                     <div className="lg:col-span-5 space-y-8">
@@ -156,7 +156,7 @@ export default function Contact() {
 
                     {/* Right Column: Main Form */}
                     <div className="lg:col-span-7">
-                        <div className="bg-white rounded-3xl shadow-2xl shadow-primary/5 border border-slate-100 p-8 md:p-10 relative overflow-hidden">
+                        <div className="bg-white rounded-3xl shadow-2xl shadow-primary/5 border border-slate-100 p-6 md:p-8 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-full -mr-10 -mt-10"></div>
 
                             {!user ? (

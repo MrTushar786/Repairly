@@ -56,8 +56,16 @@ create table if not exists device_inventory (
   image_url text,
   description text,
   category text default 'Phones',
+  quantity integer default 1,
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
+-- Ensure column exists for existing tables
+do $$ 
+begin 
+    if not exists (select 1 from information_schema.columns where table_name = 'device_inventory' and column_name = 'quantity') then 
+        alter table device_inventory add column quantity integer default 1; 
+    end if; 
+end $$;
 alter table device_inventory enable row level security;
 drop policy if exists "Public Read" on device_inventory;
 create policy "Public Read" on device_inventory for select using (true);

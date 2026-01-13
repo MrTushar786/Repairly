@@ -10,7 +10,7 @@ import About from './pages/About';
 import Booking from './pages/Booking';
 import Business from './pages/Business';
 import AdminLogin from './pages/Admin/Login';
-import AdminDashboard from './pages/Admin/Dashboard';
+import Admin from './pages/Admin/Admin';
 import ClientLogin from './pages/Client/Login';
 import ClientSignup from './pages/Client/Signup';
 import ClientDashboard from './pages/Client/Dashboard';
@@ -40,7 +40,7 @@ function App() {
 
           {/* Admin Routes - Standalone Layout */}
           <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/dashboard" element={<Admin />} />
         </Routes>
       </ShopProvider>
     </Router>

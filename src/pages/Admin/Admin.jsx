@@ -218,9 +218,9 @@ export default function AdminDashboard() {
     const uniqueCustomers = new Set(bookings.map(b => b.device_model)).size; // rough proxy for distinct customers
 
     return (
-        <div className="min-h-screen bg-slate-100 flex font-sans">
+        <div className="min-h-screen bg-[#0F172A] flex font-sans">
             {/* Dark Sidebar */}
-            <aside className="w-72 bg-slate-900 text-white fixed h-full hidden md:flex flex-col shadow-2xl z-20">
+            <aside className="w-72 bg-[#020617] text-white fixed h-full hidden md:flex flex-col shadow-2xl z-20">
                 <div className="p-8 border-b border-slate-800">
                     <div className="flex items-center gap-2 mb-2">
                         <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-black text-white">M</div>
@@ -254,7 +254,7 @@ export default function AdminDashboard() {
             </aside>
 
             {/* Mobile Bottom Nav */}
-            <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 flex justify-around items-center px-1 py-2 z-50 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+            <nav className="md:hidden fixed bottom-0 left-0 w-full bg-[#1E293B] border-t border-slate-800 flex justify-around items-center px-1 py-2 z-50 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
                 {MENU_ITEMS.map(item => (
                     <button
                         key={item.id}
@@ -278,17 +278,17 @@ export default function AdminDashboard() {
             <main className="flex-1 md:ml-72 p-4 pb-24 md:p-8 lg:p-12 overflow-y-auto w-full">
                 <header className="flex flex-col md:flex-row justify-between items-end md:items-center gap-4 mb-10">
                     <div>
-                        <h1 className="text-3xl font-black text-slate-800 mb-2">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
-                        <p className="text-slate-500">Welcome back, Administrator.</p>
+                        <h1 className="text-3xl font-black text-white mb-2">{activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}</h1>
+                        <p className="text-slate-400">Welcome back, Administrator.</p>
                     </div>
                     <div className="flex items-center gap-4 w-full md:w-auto">
                         <input
                             type="text"
                             placeholder="Search ID, Device, or Name..."
-                            className="bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-semibold focus:outline-none focus:border-blue-500 w-full md:w-64"
+                            className="bg-[#1E293B] border border-slate-700/50 rounded-xl px-4 py-2.5 text-sm font-semibold text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 w-full md:w-64"
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
-                        <button onClick={fetchData} className="px-5 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm">
+                        <button onClick={fetchData} className="px-5 py-2.5 bg-[#1E293B] border border-slate-700/50 rounded-xl text-sm font-bold text-white hover:bg-slate-800 hover:border-slate-600 transition-all shadow-sm">
                             Refresh
                         </button>
                     </div>
@@ -299,59 +299,59 @@ export default function AdminDashboard() {
                     <div className="space-y-8">
                         {/* Stats Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                            <div className="bg-[#1E293B] p-6 rounded-2xl shadow-sm border border-slate-700/50">
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
                                         <TrendingUp size={24} />
                                     </div>
                                     <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">+12%</span>
                                 </div>
-                                <div className="text-3xl font-black text-slate-800 mb-1">{bookings.length}</div>
+                                <div className="text-3xl font-black text-white mb-1">{bookings.length}</div>
                                 <div className="text-sm font-medium text-slate-400">Total Bookings</div>
                             </div>
 
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                            <div className="bg-[#1E293B] p-6 rounded-2xl shadow-sm border border-slate-700/50">
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="p-3 bg-purple-50 text-purple-600 rounded-xl">
                                         <Users size={24} />
                                     </div>
                                     <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">+5%</span>
                                 </div>
-                                <div className="text-3xl font-black text-slate-800 mb-1">{tickets.length}</div>
+                                <div className="text-3xl font-black text-white mb-1">{tickets.length}</div>
                                 <div className="text-sm font-medium text-slate-400">Message Threads</div>
                             </div>
 
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                            <div className="bg-[#1E293B] p-6 rounded-2xl shadow-sm border border-slate-700/50">
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="p-3 bg-green-50 text-green-600 rounded-xl">
                                         <DollarSign size={24} />
                                     </div>
                                     <span className="text-xs font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-full">Est.</span>
                                 </div>
-                                <div className="text-3xl font-black text-slate-800 mb-1">${totalRevenue.toLocaleString()}</div>
+                                <div className="text-3xl font-black text-white mb-1">${totalRevenue.toLocaleString()}</div>
                                 <div className="text-sm font-medium text-slate-400">Realized Revenue</div>
                             </div>
 
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                            <div className="bg-[#1E293B] p-6 rounded-2xl shadow-sm border border-slate-700/50">
                                 <div className="flex justify-between items-start mb-4">
                                     <div className="p-3 bg-orange-50 text-orange-600 rounded-xl">
                                         <Activity size={24} />
                                     </div>
-                                    <span className="text-xs font-bold text-slate-400 bg-slate-50 px-2 py-1 rounded-full">Now</span>
+                                    <span className="text-xs font-bold text-slate-400 bg-slate-800 px-2 py-1 rounded-full">Now</span>
                                 </div>
-                                <div className="text-3xl font-black text-slate-800 mb-1">Active</div>
+                                <div className="text-3xl font-black text-white mb-1">Active</div>
                                 <div className="text-sm font-medium text-slate-400">System Status</div>
                             </div>
                         </div>
 
                         {/* Recent Activity Table */}
-                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-                            <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-                                <h3 className="font-bold text-slate-800 text-lg">Recent Bookings</h3>
-                                <button onClick={() => setActiveTab('bookings')} className="text-blue-600 text-sm font-bold hover:underline">View All</button>
+                        <div className="bg-[#1E293B] rounded-2xl shadow-sm border border-slate-700/50 overflow-hidden">
+                            <div className="p-6 border-b border-slate-800 flex justify-between items-center">
+                                <h3 className="font-bold text-white text-lg">Recent Bookings</h3>
+                                <button onClick={() => setActiveTab('bookings')} className="text-blue-500 text-sm font-bold hover:underline">View All</button>
                             </div>
                             <table className="w-full text-left border-collapse">
-                                <thead className="bg-slate-50 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <thead className="bg-[#0F172A] text-xs font-bold text-slate-400 uppercase tracking-wider">
                                     <tr>
                                         <th className="p-4 pl-6">Device</th>
                                         <th className="p-4">Customer</th>
@@ -360,14 +360,14 @@ export default function AdminDashboard() {
                                         <th className="p-4 text-right">Status</th>
                                     </tr>
                                 </thead>
-                                <tbody className="text-sm font-medium text-slate-600 divide-y divide-slate-50">
+                                <tbody className="text-sm font-medium text-slate-300 divide-y divide-slate-800">
                                     {bookings.slice(0, 5).map(b => (
-                                        <tr key={b.id} className="hover:bg-slate-50 transition-colors">
-                                            <td className="p-4 pl-6 font-bold text-slate-800">{b.device_brand} {b.device_model}</td>
-                                            <td className="p-4 text-slate-500">Walk-In Customer</td>
-                                            <td className="p-4"><span className="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs font-bold uppercase">{services.find(s => s.id === b.service_type)?.label || b.service_type}</span></td>
+                                        <tr key={b.id} className="hover:bg-slate-800 transition-colors">
+                                            <td className="p-4 pl-6 font-bold text-white">{b.device_brand} {b.device_model}</td>
+                                            <td className="p-4 text-slate-400">Walk-In Customer</td>
+                                            <td className="p-4"><span className="bg-blue-500/10 text-blue-400 px-2 py-1 rounded text-xs font-bold uppercase">{services.find(s => s.id === b.service_type)?.label || b.service_type}</span></td>
                                             <td className="p-4">{b.appointment_date}</td>
-                                            <td className="p-4 text-right"><span className="text-green-600 font-bold text-xs bg-green-50 px-2 py-1 rounded-full">CONFIRMED</span></td>
+                                            <td className="p-4 text-right"><span className="text-green-500 font-bold text-xs bg-green-500/10 px-2 py-1 rounded-full">CONFIRMED</span></td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -378,9 +378,9 @@ export default function AdminDashboard() {
 
                 {/* BOOKINGS TAB */}
                 {activeTab === 'bookings' && (
-                    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div className="bg-[#1E293B] rounded-2xl shadow-sm border border-slate-700/50 overflow-hidden">
                         <table className="w-full text-left border-collapse">
-                            <thead className="bg-slate-50 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                            <thead className="bg-[#0F172A] text-xs font-bold text-slate-400 uppercase tracking-wider">
                                 <tr>
                                     <th className="p-4 pl-6">ID</th>
                                     <th className="p-4">Device</th>
@@ -390,40 +390,40 @@ export default function AdminDashboard() {
                                     <th className="p-4 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="text-sm font-medium text-slate-600 divide-y divide-slate-100">
+                            <tbody className="text-sm font-medium text-slate-300 divide-y divide-slate-800">
                                 {bookings.filter(b =>
                                     (b.device_model || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                                     (b.device_brand || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                                     (b.customer_name && b.customer_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
                                     String(b.id).includes(searchTerm)
                                 ).map(b => (
-                                    <tr key={b.id} className="hover:bg-slate-50 transition-colors group">
+                                    <tr key={b.id} className="hover:bg-slate-800 transition-colors group">
                                         <td className="p-4 pl-6 font-mono text-xs text-slate-400">#{b.id}</td>
                                         <td className="p-4">
-                                            <div className="font-bold text-slate-800">{b.device_brand} {b.device_model}</div>
-                                            <div className="text-xs text-slate-400 bg-slate-100 inline-block px-1.5 py-0.5 rounded mt-1">{services.find(s => s.id === b.service_type)?.label || b.service_type}</div>
+                                            <div className="font-bold text-white">{b.device_brand} {b.device_model}</div>
+                                            <div className="text-xs text-slate-400 bg-slate-800 inline-block px-1.5 py-0.5 rounded mt-1">{services.find(s => s.id === b.service_type)?.label || b.service_type}</div>
                                         </td>
                                         <td className="p-4">
                                             <div className="flex flex-col gap-1 items-start">
-                                                <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-wider ${b.status === 'Completed' ? 'bg-green-100 text-green-700' :
-                                                    b.status === 'Ready for Pickup' ? 'bg-purple-100 text-purple-700' :
-                                                        b.status === 'Waiting for Parts' ? 'bg-orange-100 text-orange-700' :
-                                                            b.status === 'Diagnosing' ? 'bg-yellow-100 text-yellow-700' :
-                                                                b.status === 'In Progress' ? 'bg-blue-100 text-blue-700' :
-                                                                    'bg-slate-100 text-slate-500'
+                                                <span className={`px-2 py-1 rounded text-[10px] font-black uppercase tracking-wider ${b.status === 'Completed' ? 'bg-green-500/10 text-green-400' :
+                                                    b.status === 'Ready for Pickup' ? 'bg-purple-500/10 text-purple-400' :
+                                                        b.status === 'Waiting for Parts' ? 'bg-orange-500/10 text-orange-400' :
+                                                            b.status === 'Diagnosing' ? 'bg-yellow-500/10 text-yellow-400' :
+                                                                b.status === 'In Progress' ? 'bg-blue-500/10 text-blue-400' :
+                                                                    'bg-slate-800 text-slate-400'
                                                     }`}>
                                                     {b.status || 'Received'}
                                                 </span>
-                                                <span className="font-bold text-slate-700 text-xs">{b.estimated_cost ? b.estimated_cost : 'No Quote'}</span>
+                                                <span className="font-bold text-slate-200 text-xs">{b.estimated_cost ? b.estimated_cost : 'No Quote'}</span>
                                             </div>
                                         </td>
                                         <td className="p-4">
-                                            <div className="font-bold text-slate-700">{b.customer_name || 'Guest'}</div>
+                                            <div className="font-bold text-white">{b.customer_name || 'Guest'}</div>
                                             <div className="flex gap-2 mt-1">
-                                                <a href={`https://wa.me/${(b.customer_phone || '').replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" className="p-1.5 bg-green-50 text-green-600 rounded hover:bg-green-100 transition-colors" title="WhatsApp">
+                                                <a href={`https://wa.me/${(b.customer_phone || '').replace(/[^0-9]/g, '')}`} target="_blank" rel="noreferrer" className="p-1.5 bg-green-500/10 text-green-400 rounded hover:bg-green-500/20 transition-colors" title="WhatsApp">
                                                     <MessageSquare size={14} />
                                                 </a>
-                                                <a href={`tel:${b.customer_phone}`} className="p-1.5 bg-blue-50 text-blue-600 rounded hover:bg-blue-100 transition-colors" title="Call">
+                                                <a href={`tel:${b.customer_phone}`} className="p-1.5 bg-blue-500/10 text-blue-400 rounded hover:bg-blue-500/20 transition-colors" title="Call">
                                                     <Phone size={14} />
                                                 </a>
                                             </div>
@@ -436,14 +436,14 @@ export default function AdminDashboard() {
                                             <div className="flex justify-end gap-2">
                                                 <button
                                                     onClick={() => setEditingBooking(b)}
-                                                    className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-100"
+                                                    className="p-2 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors border border-transparent hover:border-blue-500/20"
                                                     title="Edit Booking"
                                                 >
                                                     <Edit2 size={16} />
                                                 </button>
                                                 <button
                                                     onClick={(e) => handleDelete('bookings', b.id, e)}
-                                                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-100"
+                                                    className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors border border-transparent hover:border-red-500/20"
                                                     title="Delete"
                                                 >
                                                     <Trash2 size={16} />
@@ -460,9 +460,9 @@ export default function AdminDashboard() {
                 {/* Booking Edit Modal */}
                 {editingBooking && (
                     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
-                        <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-                            <h3 className="text-xl font-bold text-slate-800 mb-1">Update Repair #{editingBooking.id}</h3>
-                            <p className="text-sm text-slate-500 mb-6">{editingBooking.device_brand} {editingBooking.device_model}</p>
+                        <div className="bg-[#1E293B] rounded-2xl shadow-2xl p-8 w-full max-w-md">
+                            <h3 className="text-xl font-bold text-white mb-1">Update Repair #{editingBooking.id}</h3>
+                            <p className="text-sm text-slate-400 mb-6">{editingBooking.device_brand} {editingBooking.device_model}</p>
 
                             <div className="space-y-4">
                                 <div>
@@ -470,7 +470,7 @@ export default function AdminDashboard() {
                                     <select
                                         value={editingBooking.status || 'Received'}
                                         onChange={e => setEditingBooking({ ...editingBooking, status: e.target.value })}
-                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:outline-none focus:border-blue-500 appearance-none"
+                                        className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white focus:outline-none focus:border-blue-500 appearance-none"
                                     >
                                         <option value="Received">Received / In Queue</option>
                                         <option value="Diagnosing">Diagnosing</option>
@@ -488,7 +488,7 @@ export default function AdminDashboard() {
                                         type="text"
                                         value={editingBooking.estimated_cost || ''}
                                         onChange={e => setEditingBooking({ ...editingBooking, estimated_cost: e.target.value })}
-                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:outline-none focus:border-blue-500"
+                                        className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white focus:outline-none focus:border-blue-500"
                                         placeholder="e.g. $120.00"
                                     />
                                     <p className="text-[10px] text-slate-400 mt-1">This will be shown to the customer.</p>
@@ -499,7 +499,7 @@ export default function AdminDashboard() {
                                     <textarea
                                         value={editingBooking.tech_notes || ''}
                                         onChange={e => setEditingBooking({ ...editingBooking, tech_notes: e.target.value })}
-                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-600 focus:outline-none focus:border-blue-500 min-h-[100px]"
+                                        className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-medium text-slate-300 focus:outline-none focus:border-blue-500 min-h-[100px]"
                                         placeholder="Internal notes about the repair, passcode, damage details, etc."
                                     />
                                 </div>
@@ -508,7 +508,7 @@ export default function AdminDashboard() {
                             <div className="flex gap-3 mt-8">
                                 <button
                                     onClick={() => setEditingBooking(null)}
-                                    className="flex-1 py-3 text-slate-400 font-bold hover:text-slate-600"
+                                    className="flex-1 py-3 text-slate-400 font-bold hover:text-white"
                                 >
                                     Cancel
                                 </button>
@@ -525,9 +525,9 @@ export default function AdminDashboard() {
 
                 {/* TICKETS TAB */}
                 {activeTab === 'tickets' && (
-                    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div className="bg-[#1E293B] rounded-2xl shadow-sm border border-slate-700/50 overflow-hidden">
                         <table className="w-full text-left border-collapse">
-                            <thead className="bg-slate-50 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                            <thead className="bg-[#0F172A] text-xs font-bold text-slate-400 uppercase tracking-wider">
                                 <tr>
                                     <th className="p-4 pl-6">Date</th>
                                     <th className="p-4">Sender</th>
@@ -536,38 +536,38 @@ export default function AdminDashboard() {
                                     <th className="p-4 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody className="text-sm font-medium text-slate-600 divide-y divide-slate-100">
+                            <tbody className="text-sm font-medium text-slate-300 divide-y divide-slate-800">
                                 {tickets.filter(t =>
                                     (t.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                                     (t.email || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                                     (t.subject || '').toLowerCase().includes(searchTerm.toLowerCase())
                                 ).map((t) => (
-                                    <tr key={t.id} className="hover:bg-slate-50 transition-colors group">
+                                    <tr key={t.id} className="hover:bg-slate-800 transition-colors group">
                                         <td className="p-4 pl-6 text-xs text-slate-400 whitespace-nowrap">
                                             {new Date(t.created_at).toLocaleDateString()}
                                             <div className="text-[10px] opacity-70">{new Date(t.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                                         </td>
                                         <td className="p-4">
-                                            <div className="font-bold text-slate-700">{t.name}</div>
+                                            <div className="font-bold text-white">{t.name}</div>
                                             <div className="text-xs text-slate-400">{t.email}</div>
                                         </td>
                                         <td className="p-4">
-                                            <span className="bg-purple-50 text-purple-600 px-2 py-1 rounded text-xs font-bold uppercase">{t.subject}</span>
+                                            <span className="bg-purple-500/10 text-purple-400 px-2 py-1 rounded text-xs font-bold uppercase">{t.subject}</span>
                                         </td>
-                                        <td className="p-4 max-w-md truncate text-slate-500" title={t.message}>
+                                        <td className="p-4 max-w-md truncate text-slate-400" title={t.message}>
                                             {t.message}
                                         </td>
                                         <td className="p-4 text-right flex justify-end gap-2">
                                             <a
                                                 href={`mailto:${t.email}?subject=Re: ${t.subject} - Support Inquiry`}
-                                                className="p-2 text-slate-300 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"
+                                                className="p-2 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors"
                                                 title="Reply via Email"
                                             >
                                                 <Mail size={16} />
                                             </a>
                                             <button
                                                 onClick={(e) => handleDelete('support_tickets', t.id, e)}
-                                                className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                                className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                                                 title="Delete Ticket"
                                             >
                                                 <Trash2 size={16} />
@@ -592,7 +592,7 @@ export default function AdminDashboard() {
                     <div className="space-y-6">
                         <div className="flex items-center justify-between">
                             <div>
-                                <h2 className="text-lg font-bold text-slate-800">Header Menu</h2>
+                                <h2 className="text-lg font-bold text-white">Header Menu</h2>
                                 <p className="text-slate-400 text-sm">Manage the "Services" dropdown links in the website header.</p>
                             </div>
                             <button
@@ -614,18 +614,19 @@ export default function AdminDashboard() {
                                         alert("Failed to seed. Check if table 'service_menu_items' exists.");
                                     }
                                 }}
-                                className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-lg hover:bg-blue-100 transition-colors"
+                                className="text-xs font-bold text-blue-400 bg-blue-500/10 px-3 py-1 rounded-lg hover:bg-blue-500/20 transition-colors"
                             >
                                 Seed Defaults
                             </button>
                         </div>
 
-                        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                            <div className="flex gap-4 mb-6">
+                        <div className="bg-[#1E293B] rounded-2xl shadow-sm border border-slate-700/50 overflow-hidden">
+                            {/* Toolbar / Add Form */}
+                            <div className="p-4 border-b border-slate-700/50 flex gap-4 bg-[#1E293B]">
                                 <input
                                     type="text"
                                     placeholder="New Menu Label (e.g. 'Console Repair')"
-                                    className="flex-1 p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 outline-none focus:border-blue-500"
+                                    className="flex-1 p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white outline-none focus:border-blue-500 placeholder:text-slate-500"
                                     id="newMenuItem"
                                     onKeyDown={async (e) => {
                                         if (e.key === 'Enter') {
@@ -664,26 +665,40 @@ export default function AdminDashboard() {
                                 </button>
                             </div>
 
-                            <div className="space-y-2">
-                                {menuItems.filter(item =>
-                                    (item.label || '').toLowerCase().includes(searchTerm.toLowerCase())
-                                ).map(item => (
-                                    <div key={item.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-200 group">
-                                        <span className="font-bold text-slate-700">{item.label}</span>
-                                        <button
-                                            onClick={(e) => handleDelete('service_menu_items', item.id, e)}
-                                            className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </div>
-                                ))}
-                                {menuItems.length === 0 && (
-                                    <div className="text-center py-8 text-slate-400">
-                                        No menu items yet. Add one above!
-                                    </div>
-                                )}
-                            </div>
+                            {/* Table */}
+                            <table className="w-full text-left border-collapse">
+                                <thead className="bg-[#0F172A] text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                    <tr>
+                                        <th className="p-4 pl-6">Menu Label</th>
+                                        <th className="p-4 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="text-sm font-medium text-slate-300 divide-y divide-slate-800">
+                                    {menuItems.length === 0 ? (
+                                        <tr>
+                                            <td colSpan="2" className="p-8 text-center text-slate-400">
+                                                No menu items yet. Add one above!
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        menuItems.filter(item =>
+                                            (item.label || '').toLowerCase().includes(searchTerm.toLowerCase())
+                                        ).map(item => (
+                                            <tr key={item.id} className="hover:bg-slate-800 transition-colors group">
+                                                <td className="p-4 pl-6 font-bold text-white">{item.label}</td>
+                                                <td className="p-4 text-right">
+                                                    <button
+                                                        onClick={(e) => handleDelete('service_menu_items', item.id, e)}
+                                                        className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                                                    >
+                                                        <Trash2 size={18} />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 )}
@@ -693,7 +708,7 @@ export default function AdminDashboard() {
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h2 className="text-lg font-bold text-slate-800">Device Models Database</h2>
+                                <h2 className="text-lg font-bold text-white">Device Models Database</h2>
                                 <p className="text-slate-400 text-sm">Manage categories, brands, and models for the repair widget.</p>
                             </div>
                             <div className="flex gap-2">
@@ -738,24 +753,25 @@ export default function AdminDashboard() {
                                         alert(`Seeded ${successCount} new models!`);
                                         fetchData();
                                     }}
-                                    className="px-4 py-2 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-colors flex items-center gap-2"
+                                    className="px-4 py-2 bg-[#0F172A] text-white font-bold rounded-xl hover:bg-slate-800 border border-slate-700/50 transition-colors flex items-center gap-2"
                                 >
                                     <Database size={18} /> Seed from Data
                                 </button>
                             </div>
                         </div>
 
-                        <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm">
-                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                                <select id="newModelCat" className="p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700">
+                        <div className="bg-[#1E293B] rounded-2xl shadow-sm border border-slate-700/50 overflow-hidden">
+                            {/* Toolbar / Add Form */}
+                            <div className="p-4 border-b border-slate-700/50 grid grid-cols-1 md:grid-cols-4 gap-4 bg-[#1E293B]">
+                                <select id="newModelCat" className="p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white outline-none focus:border-blue-500 appearance-none">
                                     <option value="Phone">Phone</option>
                                     <option value="Tablet">Tablet</option>
                                     <option value="Laptop">Laptop</option>
                                     <option value="Console">Console</option>
                                     <option value="Other">Other</option>
                                 </select>
-                                <input id="newModelBrand" type="text" placeholder="Brand (e.g. Apple)" className="p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700" />
-                                <input id="newModelName" type="text" placeholder="Model (e.g. iPhone 15)" className="p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700" />
+                                <input id="newModelBrand" type="text" placeholder="Brand (e.g. Apple)" className="p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white outline-none focus:border-blue-500 placeholder:text-slate-500" />
+                                <input id="newModelName" type="text" placeholder="Model (e.g. iPhone 15)" className="p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white outline-none focus:border-blue-500 placeholder:text-slate-500" />
                                 <button
                                     onClick={async () => {
                                         const cat = document.getElementById('newModelCat').value;
@@ -781,27 +797,51 @@ export default function AdminDashboard() {
                                 </button>
                             </div>
 
-                            <div className="max-h-[500px] overflow-y-auto space-y-2 pr-2 custom-scrollbar">
-                                {models.filter(m =>
-                                    (m.brand || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                    (m.model || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                    (m.category || '').toLowerCase().includes(searchTerm.toLowerCase())
-                                ).map(m => (
-                                    <div key={m.id} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-100 group">
-                                        <div className="flex gap-4 items-center">
-                                            <span className="text-xs font-bold uppercase bg-slate-200 text-slate-600 px-2 py-1 rounded">{m.category}</span>
-                                            <span className="text-sm font-bold text-slate-500">{m.brand}</span>
-                                            <span className="font-bold text-slate-800">{m.model}</span>
-                                        </div>
-                                        <button
-                                            onClick={(e) => handleDelete('device_models', m.id, e)}
-                                            className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </div>
-                                ))}
-                                {models.length === 0 && <p className="text-center text-slate-400 py-10">No models found. Try seeding.</p>}
+                            {/* Table */}
+                            <div className="max-h-[600px] overflow-y-auto custom-scrollbar">
+                                <table className="w-full text-left border-collapse relative">
+                                    <thead className="bg-[#0F172A] text-xs font-bold text-slate-400 uppercase tracking-wider sticky top-0 z-10">
+                                        <tr>
+                                            <th className="p-4 pl-6">Category</th>
+                                            <th className="p-4">Brand</th>
+                                            <th className="p-4">Model</th>
+                                            <th className="p-4 text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="text-sm font-medium text-slate-300 divide-y divide-slate-800">
+                                        {models.length === 0 ? (
+                                            <tr>
+                                                <td colSpan="4" className="p-8 text-center text-slate-400">
+                                                    No models found. Try seeding.
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            models.filter(m =>
+                                                (m.brand || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                                (m.model || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                                (m.category || '').toLowerCase().includes(searchTerm.toLowerCase())
+                                            ).map(m => (
+                                                <tr key={m.id} className="hover:bg-slate-800 transition-colors group">
+                                                    <td className="p-4 pl-6">
+                                                        <span className="text-xs font-bold uppercase bg-slate-800 text-slate-400 px-2 py-1 rounded border border-slate-700/50">
+                                                            {m.category}
+                                                        </span>
+                                                    </td>
+                                                    <td className="p-4 text-slate-400">{m.brand}</td>
+                                                    <td className="p-4 font-bold text-white">{m.model}</td>
+                                                    <td className="p-4 text-right">
+                                                        <button
+                                                            onClick={(e) => handleDelete('device_models', m.id, e)}
+                                                            className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                                                        >
+                                                            <Trash2 size={18} />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -812,7 +852,7 @@ export default function AdminDashboard() {
                     <div className="space-y-6">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h2 className="text-lg font-bold text-slate-800">Service Catalog</h2>
+                                <h2 className="text-lg font-bold text-white">Service Catalog</h2>
                                 <p className="text-slate-400 text-sm">Manage the list of repair services and prices.</p>
                             </div>
                             <div className="flex gap-2">
@@ -846,7 +886,7 @@ export default function AdminDashboard() {
                                         alert(`Added ${count} services!`);
                                         fetchData();
                                     }}
-                                    className="px-4 py-2 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 transition-colors flex items-center gap-2"
+                                    className="px-4 py-2 bg-slate-800 text-slate-300 font-bold rounded-xl hover:bg-slate-700 transition-colors flex items-center gap-2"
                                 >
                                     <Database size={18} /> Seed Defaults
                                 </button>
@@ -862,8 +902,8 @@ export default function AdminDashboard() {
                         {/* Edit Modal / Form Overlay */}
                         {editingService && (
                             <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
-                                <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md">
-                                    <h3 className="text-xl font-bold text-slate-800 mb-6">{editingService.id ? 'Edit Service' : 'New Service'}</h3>
+                                <div className="bg-[#1E293B] rounded-2xl shadow-2xl p-8 w-full max-w-md">
+                                    <h3 className="text-xl font-bold text-white mb-6">{editingService.id ? 'Edit Service' : 'New Service'}</h3>
 
                                     <div className="space-y-4">
                                         <div>
@@ -871,7 +911,7 @@ export default function AdminDashboard() {
                                             <select
                                                 value={editingService.label}
                                                 onChange={e => setEditingService({ ...editingService, label: e.target.value })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:outline-none focus:border-blue-500 appearance-none"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white focus:outline-none focus:border-blue-500 appearance-none"
                                             >
                                                 <option value="">Select Service Label...</option>
                                                 {menuItems.length > 0 ? (
@@ -890,7 +930,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={editingService.price}
                                                 onChange={e => setEditingService({ ...editingService, price: e.target.value })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:outline-none focus:border-blue-500"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white focus:outline-none focus:border-blue-500"
                                                 placeholder="e.g. $129+"
                                             />
                                         </div>
@@ -901,7 +941,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={editingService.duration || ''}
                                                 onChange={e => setEditingService({ ...editingService, duration: e.target.value })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:outline-none focus:border-blue-500"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white focus:outline-none focus:border-blue-500"
                                                 placeholder="e.g. 1-2 Hours"
                                             />
                                         </div>
@@ -920,7 +960,7 @@ export default function AdminDashboard() {
                                                         </button>
                                                     </div>
                                                 ) : (
-                                                    <div className="w-16 h-16 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-400">
+                                                    <div className="w-16 h-16 bg-[#0F172A] rounded-xl border-2 border-dashed border-slate-700/50 flex items-center justify-center text-slate-400">
                                                         <ImageIcon size={24} />
                                                     </div>
                                                 )}
@@ -961,7 +1001,7 @@ export default function AdminDashboard() {
                                                     <button
                                                         key={iconKey}
                                                         onClick={() => setEditingService({ ...editingService, icon_key: iconKey })}
-                                                        className={`p-3 rounded-xl flex items-center justify-center border transition-all ${editingService.icon_key === iconKey ? 'bg-blue-600 text-white border-blue-600' : 'bg-slate-50 border-slate-200 text-slate-400 hover:border-blue-300'}`}
+                                                        className={`p-3 rounded-xl flex items-center justify-center border transition-all ${editingService.icon_key === iconKey ? 'bg-blue-600 text-white border-blue-600' : 'bg-[#0F172A] border-slate-700/50 text-slate-400 hover:border-blue-500'}`}
                                                         title={iconKey}
                                                     >
                                                         {iconKey === 'Smartphone' && <Smartphone size={20} />}
@@ -983,13 +1023,13 @@ export default function AdminDashboard() {
                                     <div className="flex gap-3 mt-8">
                                         <button
                                             onClick={() => setEditingService(null)}
-                                            className="flex-1 py-3 text-slate-400 font-bold hover:text-slate-600"
+                                            className="flex-1 py-3 text-slate-400 font-bold hover:text-white"
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             onClick={handleSaveService}
-                                            className="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200"
+                                            className="flex-1 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700"
                                         >
                                             {editingService.id ? 'Save Changes' : 'Create Service'}
                                         </button>
@@ -998,9 +1038,9 @@ export default function AdminDashboard() {
                             </div>
                         )}
 
-                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div className="bg-[#1E293B] rounded-2xl shadow-sm border border-slate-700/50 overflow-hidden">
                             <table className="w-full text-left border-collapse">
-                                <thead className="bg-slate-50 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <thead className="bg-[#0F172A] text-xs font-bold text-slate-400 uppercase tracking-wider">
                                     <tr>
                                         <th className="p-4 pl-6">Image / Icon</th>
                                         <th className="p-4">Service Name</th>
@@ -1009,7 +1049,7 @@ export default function AdminDashboard() {
                                         <th className="p-4 text-right">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="text-sm font-medium text-slate-600 divide-y divide-slate-100">
+                                <tbody className="text-sm font-medium text-slate-300 divide-y divide-slate-800">
                                     {services.length === 0 ? (
                                         <tr>
                                             <td colSpan="5" className="p-8 text-center text-slate-400">
@@ -1022,14 +1062,14 @@ export default function AdminDashboard() {
                                             (s.label || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                                             (s.price || '').toLowerCase().includes(searchTerm.toLowerCase())
                                         ).map(s => (
-                                            <tr key={s.id} className="hover:bg-slate-50 transition-colors">
+                                            <tr key={s.id} className="hover:bg-slate-800 transition-colors">
                                                 <td className="p-4 pl-6">
                                                     {s.image_url ? (
                                                         <div className="w-10 h-10 rounded-full overflow-hidden border border-slate-200">
                                                             <img src={s.image_url} alt={s.label} className="w-full h-full object-cover" />
                                                         </div>
                                                     ) : (
-                                                        <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500">
+                                                        <div className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-slate-400">
                                                             {s.icon_key === 'Smartphone' && <Smartphone size={18} />}
                                                             {s.icon_key === 'Battery' && <Battery size={18} />}
                                                             {s.icon_key === 'Droplets' && <Droplets size={18} />}
@@ -1043,9 +1083,9 @@ export default function AdminDashboard() {
                                                         </div>
                                                     )}
                                                 </td>
-                                                <td className="p-4 font-bold text-slate-800">{s.label}</td>
-                                                <td className="p-4 text-slate-500 text-xs">{s.duration || '-'}</td>
-                                                <td className="p-4 text-slate-800 font-bold">{s.price}</td>
+                                                <td className="p-4 font-bold text-white">{s.label}</td>
+                                                <td className="p-4 text-slate-400 text-xs">{s.duration || '-'}</td>
+                                                <td className="p-4 text-white font-bold">{s.price}</td>
                                                 <td className="p-4 text-right flex justify-end gap-2">
                                                     <button
                                                         onClick={() => setEditingService(s)}
@@ -1073,8 +1113,8 @@ export default function AdminDashboard() {
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
                         <div className="flex justify-between items-center">
                             <div>
-                                <h2 className="text-2xl font-black text-slate-800">Shop Inventory</h2>
-                                <p className="text-slate-500">Manage device sales and listings.</p>
+                                <h2 className="text-2xl font-black text-white">Shop Inventory</h2>
+                                <p className="text-slate-400">Manage device sales and listings.</p>
                             </div>
                             <button
                                 onClick={() => setEditingProduct({})}
@@ -1084,9 +1124,9 @@ export default function AdminDashboard() {
                             </button>
                         </div>
 
-                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div className="bg-[#1E293B] rounded-2xl shadow-sm border border-slate-700/50 overflow-hidden">
                             <table className="w-full text-left border-collapse">
-                                <thead className="bg-slate-50 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                <thead className="bg-[#0F172A] text-xs font-bold text-slate-400 uppercase tracking-wider">
                                     <tr>
                                         <th className="p-4 pl-6">Device</th>
                                         <th className="p-4">Price</th>
@@ -1095,7 +1135,7 @@ export default function AdminDashboard() {
                                         <th className="p-4 text-right">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="text-sm font-medium text-slate-600 divide-y divide-slate-50">
+                                <tbody className="text-sm font-medium text-slate-300 divide-y divide-slate-800">
                                     {inventory.length === 0 ? (
                                         <tr>
                                             <td colSpan="5" className="p-8 text-center text-slate-400">
@@ -1104,10 +1144,10 @@ export default function AdminDashboard() {
                                         </tr>
                                     ) : (
                                         inventory.map(item => (
-                                            <tr key={item.id} className="hover:bg-slate-50 transition-colors">
+                                            <tr key={item.id} className="hover:bg-slate-800 transition-colors">
                                                 <td className="p-4 pl-6">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">
+                                                        <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center overflow-hidden border border-slate-700/50">
                                                             {item.image_url ? (
                                                                 <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
                                                             ) : (
@@ -1115,15 +1155,15 @@ export default function AdminDashboard() {
                                                             )}
                                                         </div>
                                                         <div>
-                                                            <div className="font-bold text-slate-800">{item.title}</div>
+                                                            <div className="font-bold text-white">{item.title}</div>
                                                             <div className="text-xs text-slate-400">{item.brand} • {item.storage}</div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="p-4 font-bold text-slate-800">${item.price}</td>
-                                                <td className="p-4"><span className="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">{item.condition}</span></td>
+                                                <td className="p-4 font-bold text-white">${item.price}</td>
+                                                <td className="p-4"><span className="bg-slate-700 text-slate-300 px-2 py-1 rounded text-xs font-bold">{item.condition}</span></td>
                                                 <td className="p-4">
-                                                    <span className={`px-2 py-1 rounded text-xs font-bold flex w-fit items-center gap-1 ${item.status === 'Available' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                                    <span className={`px-2 py-1 rounded text-xs font-bold flex w-fit items-center gap-1 ${item.status === 'Available' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'
                                                         }`}>
                                                         {item.status === 'Available' ? <Check size={12} /> : <X size={12} />}
                                                         {item.status}
@@ -1144,11 +1184,11 @@ export default function AdminDashboard() {
                 {/* Site Settings Tab */}
                 {activeTab === 'settings' && (
                     <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4">
-                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 md:p-8">
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8 border-b border-slate-100 pb-6">
+                        <div className="bg-[#1E293B] rounded-2xl shadow-sm border border-slate-700/50 p-4 md:p-8">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 md:mb-8 border-b border-slate-700/50 pb-6">
                                 <div>
-                                    <h2 className="text-xl md:text-2xl font-black text-slate-800">Global Site Settings</h2>
-                                    <p className="text-sm md:text-base text-slate-500">Update your business information across the entire website.</p>
+                                    <h2 className="text-xl md:text-2xl font-black text-white">Global Site Settings</h2>
+                                    <p className="text-sm md:text-base text-slate-400">Update your business information across the entire website.</p>
                                 </div>
                                 <div className="flex gap-2">
                                     <button
@@ -1184,7 +1224,7 @@ export default function AdminDashboard() {
                                                 }
                                             }
                                         }}
-                                        className="w-full md:w-auto px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 flex items-center justify-center gap-2"
+                                        className="w-full md:w-auto px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 flex items-center justify-center gap-2"
                                     >
                                         <Save size={18} /> Save Changes
                                     </button>
@@ -1194,31 +1234,31 @@ export default function AdminDashboard() {
 
                             <div className="space-y-6 md:space-y-8">
                                 {/* Shop Operation Status */}
-                                <section className="bg-slate-50 border border-slate-200 rounded-xl p-6 relative overflow-hidden">
-                                    <div className={`absolute top-0 right-0 p-32 rounded-full -mr-16 -mt-16 transition-colors duration-500 ${settingsForm.isOpen ? 'bg-green-100/50' : 'bg-red-100/50'}`}></div>
+                                <section className="bg-[#020617] border border-slate-700/50 rounded-xl p-6 relative overflow-hidden">
+                                    <div className={`absolute top-0 right-0 p-32 rounded-full -mr-16 -mt-16 transition-colors duration-500 ${settingsForm.isOpen ? 'bg-green-500/10' : 'bg-red-500/10'}`}></div>
                                     <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
                                         <div>
-                                            <h3 className="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
-                                                <Store size={20} className={settingsForm.isOpen ? 'text-green-600' : 'text-red-500'} />
-                                                Shop Status: <span className={settingsForm.isOpen ? 'text-green-600' : 'text-red-600'}>{settingsForm.isOpen ? 'OPEN FOR BUSINESS' : 'TEMPORARILY CLOSED'}</span>
+                                            <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+                                                <Store size={20} className={settingsForm.isOpen ? 'text-green-500' : 'text-red-500'} />
+                                                Shop Status: <span className={settingsForm.isOpen ? 'text-green-500' : 'text-red-500'}>{settingsForm.isOpen ? 'OPEN FOR BUSINESS' : 'TEMPORARILY CLOSED'}</span>
                                             </h3>
-                                            <p className="text-sm text-slate-500 max-w-md">
+                                            <p className="text-sm text-slate-400 max-w-md">
                                                 {settingsForm.isOpen
                                                     ? "Your shop is currently marked as open. Customers can see you are available."
                                                     : "Your shop is marked as closed. A 'Closed' badge will appear on the website."}
                                             </p>
                                         </div>
                                         <div className="flex items-center gap-4">
-                                            <div className="flex bg-white rounded-lg p-1 border border-slate-200 shadow-sm">
+                                            <div className="flex bg-[#1E293B] rounded-lg p-1 border border-slate-800 shadow-sm">
                                                 <button
                                                     onClick={() => setSettingsForm({ ...settingsForm, isOpen: true })}
-                                                    className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${settingsForm.isOpen ? 'bg-green-500 text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
+                                                    className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${settingsForm.isOpen ? 'bg-green-500 text-white' : 'text-slate-400 hover:text-slate-600'}`}
                                                 >
                                                     OPEN
                                                 </button>
                                                 <button
                                                     onClick={() => setSettingsForm({ ...settingsForm, isOpen: false })}
-                                                    className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${!settingsForm.isOpen ? 'bg-red-500 text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
+                                                    className={`px-6 py-2 rounded-md text-sm font-bold transition-all ${!settingsForm.isOpen ? 'bg-red-500 text-white' : 'text-slate-400 hover:text-slate-600'}`}
                                                 >
                                                     CLOSED
                                                 </button>
@@ -1228,7 +1268,7 @@ export default function AdminDashboard() {
                                 </section>
                                 {/* General Info */}
                                 <section>
-                                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                                         <div className="w-1 h-6 bg-blue-500 rounded-full"></div> General Information
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1239,7 +1279,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.tagline}
                                                 onChange={e => setSettingsForm({ ...settingsForm, tagline: e.target.value })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:border-blue-500 outline-none"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white focus:border-blue-500 outline-none"
                                             />
                                         </div>
                                     </div>
@@ -1247,7 +1287,7 @@ export default function AdminDashboard() {
 
                                 {/* Contact Details */}
                                 <section>
-                                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                                         <div className="w-1 h-6 bg-green-500 rounded-full"></div> Contact Details
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1257,7 +1297,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.phone}
                                                 onChange={e => setSettingsForm({ ...settingsForm, phone: e.target.value })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:border-blue-500 outline-none"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white focus:border-blue-500 outline-none"
                                             />
                                         </div>
                                         <div>
@@ -1266,7 +1306,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.displayPhone}
                                                 onChange={e => setSettingsForm({ ...settingsForm, displayPhone: e.target.value })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:border-blue-500 outline-none"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white focus:border-blue-500 outline-none"
                                             />
                                         </div>
                                         <div>
@@ -1275,7 +1315,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.whatsapp}
                                                 onChange={e => setSettingsForm({ ...settingsForm, whatsapp: e.target.value })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:border-blue-500 outline-none"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white focus:border-blue-500 outline-none"
                                             />
                                         </div>
                                         <div className="md:col-span-3">
@@ -1284,7 +1324,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.email}
                                                 onChange={e => setSettingsForm({ ...settingsForm, email: e.target.value })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:border-blue-500 outline-none"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white focus:border-blue-500 outline-none"
                                             />
                                         </div>
                                     </div>
@@ -1292,7 +1332,7 @@ export default function AdminDashboard() {
 
                                 {/* Business Hours */}
                                 <section>
-                                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                                         <div className="w-1 h-6 bg-yellow-500 rounded-full"></div> Business Hours
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1302,7 +1342,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.hours?.weekdays || ''}
                                                 onChange={e => setSettingsForm({ ...settingsForm, hours: { ...settingsForm.hours, weekdays: e.target.value } })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"
                                                 placeholder="e.g. 8:00 AM - 8:00 PM"
                                             />
                                         </div>
@@ -1312,7 +1352,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.hours?.saturday || ''}
                                                 onChange={e => setSettingsForm({ ...settingsForm, hours: { ...settingsForm.hours, saturday: e.target.value } })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"
                                                 placeholder="e.g. 9:00 AM - 6:00 PM"
                                             />
                                         </div>
@@ -1322,7 +1362,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.hours?.sunday || ''}
                                                 onChange={e => setSettingsForm({ ...settingsForm, hours: { ...settingsForm.hours, sunday: e.target.value } })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"
                                                 placeholder="e.g. Closed"
                                             />
                                         </div>
@@ -1332,7 +1372,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.hours?.display || ''}
                                                 onChange={e => setSettingsForm({ ...settingsForm, hours: { ...settingsForm.hours, display: e.target.value } })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"
                                                 placeholder="Short summary for home page"
                                             />
                                         </div>
@@ -1341,7 +1381,7 @@ export default function AdminDashboard() {
 
                                 {/* Social Media */}
                                 <section>
-                                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                                         <div className="w-1 h-6 bg-blue-500 rounded-full"></div> Social Media
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1355,7 +1395,7 @@ export default function AdminDashboard() {
                                                         ...settingsForm,
                                                         socials: { ...settingsForm.socials, [platform]: e.target.value }
                                                     })}
-                                                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                    className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"
                                                     placeholder={`https://${platform}.com/...`}
                                                 />
                                             </div>
@@ -1365,7 +1405,7 @@ export default function AdminDashboard() {
 
                                 {/* Branding */}
                                 <section>
-                                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                                         <div className="w-1 h-6 bg-purple-500 rounded-full"></div> Branding
                                     </h3>
                                     <div className="grid grid-cols-2 gap-6">
@@ -1375,7 +1415,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.branding.namePrefix}
                                                 onChange={e => setSettingsForm({ ...settingsForm, branding: { ...settingsForm.branding, namePrefix: e.target.value } })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"
                                             />
                                         </div>
                                         <div>
@@ -1384,7 +1424,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.branding.nameHighlight}
                                                 onChange={e => setSettingsForm({ ...settingsForm, branding: { ...settingsForm.branding, nameHighlight: e.target.value } })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"
                                             />
                                         </div>
                                         <div className="col-span-2">
@@ -1393,7 +1433,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.branding.subDetails}
                                                 onChange={e => setSettingsForm({ ...settingsForm, branding: { ...settingsForm.branding, subDetails: e.target.value } })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"
                                             />
                                         </div>
                                     </div>
@@ -1401,7 +1441,7 @@ export default function AdminDashboard() {
 
                                 {/* Location */}
                                 <section>
-                                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                    <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                                         <div className="w-1 h-6 bg-orange-500 rounded-full"></div> Location
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1411,7 +1451,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.address.street}
                                                 onChange={e => setSettingsForm({ ...settingsForm, address: { ...settingsForm.address, street: e.target.value } })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"
                                             />
                                         </div>
                                         <div>
@@ -1420,7 +1460,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.address.city}
                                                 onChange={e => setSettingsForm({ ...settingsForm, address: { ...settingsForm.address, city: e.target.value } })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"
                                             />
                                         </div>
                                         <div className="grid grid-cols-2 gap-4">
@@ -1430,7 +1470,7 @@ export default function AdminDashboard() {
                                                     type="text"
                                                     value={settingsForm.address.state}
                                                     onChange={e => setSettingsForm({ ...settingsForm, address: { ...settingsForm.address, state: e.target.value } })}
-                                                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                    className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"
                                                 />
                                             </div>
                                             <div>
@@ -1439,7 +1479,7 @@ export default function AdminDashboard() {
                                                     type="text"
                                                     value={settingsForm.address.zip}
                                                     onChange={e => setSettingsForm({ ...settingsForm, address: { ...settingsForm.address, zip: e.target.value } })}
-                                                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                    className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"
                                                 />
                                             </div>
                                         </div>
@@ -1466,7 +1506,7 @@ export default function AdminDashboard() {
                                                 type="text"
                                                 value={settingsForm.mapLink}
                                                 onChange={e => setSettingsForm({ ...settingsForm, mapLink: e.target.value })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"
                                             />
                                         </div>
                                     </div>
@@ -1479,10 +1519,10 @@ export default function AdminDashboard() {
                 {
                     showSqlModal && (
                         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
-                            <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-2xl relative">
+                            <div className="bg-[#1E293B] rounded-2xl shadow-2xl p-8 w-full max-w-2xl relative border border-slate-700/50">
                                 <button onClick={() => setShowSqlModal(false)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><X size={24} /></button>
-                                <h3 className="text-xl font-bold text-slate-800 mb-4">Database Setup</h3>
-                                <p className="text-slate-500 mb-4">Run this SQL in your Supabase SQL Editor to create the necessary tables.</p>
+                                <h3 className="text-xl font-bold text-white mb-4">Database Setup</h3>
+                                <p className="text-slate-400 mb-4">Run this SQL in your Supabase SQL Editor to create the necessary tables.</p>
 
                                 <div className="bg-slate-900 rounded-xl p-4 overflow-x-auto mb-6 relative group">
                                     <pre className="text-emerald-400 font-mono text-sm leading-relaxed">
@@ -1551,12 +1591,10 @@ insert into storage.buckets (id, name, public)
 values ('images', 'images', true) 
 on conflict (id) do nothing;
 
-drop policy if exists "Public Access" on storage.objects;
 create policy "Public Access" 
 on storage.objects for select 
 using ( bucket_id = 'images' );
 
-drop policy if exists "Auth Upload" on storage.objects;
 create policy "Auth Upload" 
 on storage.objects for insert 
 with check ( bucket_id = 'images' and auth.role() = 'authenticated' );` }
@@ -1614,8 +1652,16 @@ create table if not exists device_inventory (
   image_url text,
   description text,
   category text default 'Phones',
+  quantity integer default 1,
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
+-- Ensure quantity column exists
+do $$ 
+begin 
+    if not exists (select 1 from information_schema.columns where table_name = 'device_inventory' and column_name = 'quantity') then 
+        alter table device_inventory add column quantity integer default 1; 
+    end if; 
+end $$;
 alter table device_inventory enable row level security;
 drop policy if exists "Public Read" on device_inventory;
 create policy "Public Read" on device_inventory for select using (true);
@@ -1627,12 +1673,10 @@ insert into storage.buckets (id, name, public)
 values ('images', 'images', true) 
 on conflict (id) do nothing;
 
-drop policy if exists "Public Access" on storage.objects;
 create policy "Public Access" 
 on storage.objects for select 
 using ( bucket_id = 'images' );
 
-drop policy if exists "Auth Upload" on storage.objects;
 create policy "Auth Upload" 
 on storage.objects for insert 
 with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
@@ -1645,7 +1689,7 @@ with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
                                 </div>
 
                                 <div className="flex justify-end">
-                                    <button onClick={() => setShowSqlModal(false)} className="px-6 py-2 bg-slate-100 text-slate-600 font-bold rounded-lg hover:bg-slate-200">Close</button>
+                                    <button onClick={() => setShowSqlModal(false)} className="px-6 py-2 bg-[#0F172A] border border-slate-700/50 text-slate-400 font-bold rounded-lg hover:text-white hover:border-slate-500">Close</button>
                                 </div>
                             </div>
                         </div>
@@ -1656,10 +1700,10 @@ with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
             {/* Inventory Edit Modal */}
             {editingProduct && (
                 <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto custom-scrollbar">
+                    <div className="bg-[#1E293B] rounded-2xl shadow-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto custom-scrollbar">
                         <div className="flex justify-between items-center mb-6">
-                            <h3 className="text-xl font-bold text-slate-800">{editingProduct.id ? 'Edit Device' : 'Add New Device'}</h3>
-                            <button onClick={() => setEditingProduct(null)} className="text-slate-400 hover:text-slate-600"><X size={24} /></button>
+                            <h3 className="text-xl font-bold text-white">{editingProduct.id ? 'Edit Device' : 'Add New Device'}</h3>
+                            <button onClick={() => setEditingProduct(null)} className="text-slate-400 hover:text-white"><X size={24} /></button>
                         </div>
                         <form onSubmit={async (e) => {
                             e.preventDefault();
@@ -1686,12 +1730,12 @@ with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
                         }} className="space-y-4">
                             <div>
                                 <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Title (e.g. iPhone 13 Pro)</label>
-                                <input name="title" required defaultValue={editingProduct.title} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700" />
+                                <input name="title" required defaultValue={editingProduct.title} className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white" />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Brand</label>
-                                    <select name="brand" defaultValue={editingProduct.brand || ''} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700">
+                                    <select name="brand" defaultValue={editingProduct.brand || ''} className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white">
                                         <option value="" disabled>Select Brand</option>
                                         {[...new Set(models.map(m => m.brand))].sort().map(brand => (
                                             <option key={brand} value={brand}>{brand}</option>
@@ -1700,7 +1744,7 @@ with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
                                 </div>
                                 <div>
                                     <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Category</label>
-                                    <select name="category" defaultValue={editingProduct.category || ''} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700">
+                                    <select name="category" defaultValue={editingProduct.category || ''} className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white">
                                         <option value="" disabled>Select Category</option>
                                         {[...new Set(models.map(m => m.category))].sort().map(cat => (
                                             <option key={cat} value={cat}>{cat}</option>
@@ -1708,14 +1752,18 @@ with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
                                     </select>
                                 </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-3 gap-4">
                                 <div>
                                     <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Price ($)</label>
-                                    <input name="price" type="number" step="0.01" required defaultValue={editingProduct.price} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700" />
+                                    <input name="price" type="number" step="0.01" required defaultValue={editingProduct.price} className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Quantity</label>
+                                    <input name="quantity" type="number" min="0" required defaultValue={editingProduct.quantity || 1} className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white" />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Condition</label>
-                                    <select name="condition" defaultValue={editingProduct.condition || 'Refurbished'} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700">
+                                    <select name="condition" defaultValue={editingProduct.condition || 'Refurbished'} className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white">
                                         <option value="New">New</option>
                                         <option value="Refurbished">Refurbished</option>
                                         <option value="Used">Used</option>
@@ -1725,18 +1773,18 @@ with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Storage</label>
-                                    <input name="storage" defaultValue={editingProduct.storage} placeholder="e.g. 128GB" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700" />
+                                    <input name="storage" defaultValue={editingProduct.storage} placeholder="e.g. 128GB" className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white" />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Color</label>
-                                    <input name="color" defaultValue={editingProduct.color} placeholder="e.g. Midnight" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700" />
+                                    <input name="color" defaultValue={editingProduct.color} placeholder="e.g. Midnight" className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white" />
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Device Image</label>
                                 <div className="space-y-3">
                                     {editingProduct.image_url && (
-                                        <div className="relative w-full h-32 bg-slate-50 rounded-xl overflow-hidden border border-slate-200 group">
+                                        <div className="relative w-full h-32 bg-[#0F172A] rounded-xl overflow-hidden border border-slate-700/50 group">
                                             <img src={editingProduct.image_url} alt="Preview" className="w-full h-full object-contain mix-blend-multiply" />
                                             <button
                                                 type="button"
@@ -1749,7 +1797,7 @@ with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
                                     )}
 
                                     <div className="flex items-center gap-3">
-                                        <label className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 border-dashed border-slate-200 cursor-pointer hover:border-primary hover:bg-blue-50 transition-all group ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                                        <label className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 border-dashed border-slate-700/50 cursor-pointer hover:border-blue-500 hover:bg-blue-500/10 transition-all group ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
                                             <input
                                                 type="file"
                                                 accept="image/*"
@@ -1758,11 +1806,11 @@ with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
                                                 disabled={uploading}
                                             />
                                             {uploading ? (
-                                                <Loader size={18} className="animate-spin text-primary" />
+                                                <Loader size={18} className="animate-spin text-blue-500" />
                                             ) : (
-                                                <Upload size={18} className="text-slate-400 group-hover:text-primary transition-colors" />
+                                                <Upload size={18} className="text-slate-400 group-hover:text-blue-500 transition-colors" />
                                             )}
-                                            <span className="text-sm font-bold text-slate-500 group-hover:text-primary transition-colors">
+                                            <span className="text-sm font-bold text-slate-400 group-hover:text-blue-400 transition-colors">
                                                 {uploading ? 'Uploading...' : 'Upload New Image'}
                                             </span>
                                         </label>
@@ -1771,21 +1819,21 @@ with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
                                             value={editingProduct.image_url || ''}
                                             onChange={(e) => setEditingProduct(prev => ({ ...prev, image_url: e.target.value }))}
                                             placeholder="Or paste URL..."
-                                            className="flex-1 p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 text-sm"
+                                            className="flex-1 p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white text-sm"
                                         />
                                     </div>
                                 </div>
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Status</label>
-                                <select name="status" defaultValue={editingProduct.status || 'Available'} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700">
+                                <select name="status" defaultValue={editingProduct.status || 'Available'} className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white">
                                     <option value="Available">Available</option>
                                     <option value="Out of Stock">Out of Stock</option>
                                 </select>
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Description</label>
-                                <textarea name="description" rows="3" defaultValue={editingProduct.description} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"></textarea>
+                                <textarea name="description" rows="3" defaultValue={editingProduct.description} className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white"></textarea>
                             </div>
                             <button type="submit" className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 shadow-lg shadow-blue-200 transition-all">
                                 {editingProduct.id ? 'Save Changes' : 'Add Device'}
@@ -1807,37 +1855,37 @@ with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
                         ></div>
 
                         <div
-                            className="absolute z-[100] bg-white rounded-2xl shadow-2xl p-6 w-80 border border-slate-100 animate-in fade-in zoom-in-95 duration-200"
+                            className="absolute z-[100] bg-[#1E293B] rounded-2xl shadow-2xl p-6 w-80 border border-slate-700/50 animate-in fade-in zoom-in-95 duration-200"
                             style={{
                                 top: deleteConfirm.position.top,
                                 right: deleteConfirm.position.right
                             }}
                         >
                             <div className="flex flex-col items-center text-center">
-                                <div className="w-12 h-12 bg-red-100 text-red-500 rounded-full flex items-center justify-center mb-3">
+                                <div className="w-12 h-12 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mb-3">
                                     <AlertTriangle size={24} />
                                 </div>
-                                <h3 className="text-lg font-black text-slate-800 mb-1">Confirm Delete</h3>
-                                <p className="text-slate-500 text-xs mb-4 leading-relaxed">
+                                <h3 className="text-lg font-black text-white mb-1">Confirm Delete</h3>
+                                <p className="text-slate-400 text-xs mb-4 leading-relaxed">
                                     Permanently remove this item?
                                 </p>
                                 <div className="flex gap-2 w-full">
                                     <button
                                         onClick={() => setDeleteConfirm({ ...deleteConfirm, show: false })}
-                                        className="flex-1 py-2 text-slate-500 font-bold hover:bg-slate-50 rounded-lg transition-colors text-sm"
+                                        className="flex-1 py-2 text-slate-400 font-bold hover:bg-slate-800 rounded-lg transition-colors text-sm"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         onClick={confirmDelete}
-                                        className="flex-1 py-2 bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 shadow-md shadow-red-100 transition-colors text-sm"
+                                        className="flex-1 py-2 bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 shadow-md shadow-red-500/20 transition-colors text-sm"
                                     >
                                         Delete
                                     </button>
                                 </div>
                             </div>
                             {/* Little arrow pointing to the right (towards the button) */}
-                            <div className="absolute top-8 -right-2 w-4 h-4 bg-white rotate-45 border-t border-r border-slate-100"></div>
+                            <div className="absolute top-8 -right-2 w-4 h-4 bg-[#1E293B] rotate-45 border-t border-r border-slate-700/50"></div>
                         </div>
                     </>
                 )

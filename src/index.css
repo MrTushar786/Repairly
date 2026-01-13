@@ -31,6 +31,63 @@
     }
 }
 
+/* =========================================
+   SCROLLBAR CUSTOMIZATION
+   ========================================= */
+
+/* Webkit Scrollbar (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+    width: 8px; /* Vertical scrollbar width */
+    height: 8px; /* Horizontal scrollbar height */
+}
+
+/* Track (Background) */
+::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+}
+
+/* Thumb (Handle) */
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1; /* slate-300 */
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box; /* Makes the thumb smaller than the track */
+    transition: background-color 0.2s ease;
+}
+
+/* Thumb Hover State */
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8; /* slate-400 */
+    border: 0px solid transparent;
+    background-clip: padding-box;
+}
+
+/* Custom class for hidden scrollbar but functional */
+.scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Custom class for thinner scrollbar (e.g., for sidebars) */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #e2e8f0; /* slate-200 */
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #cbd5e1; /* slate-300 */
+}
+
+
 @keyframes scan {
     0% {
         top: 0%;
@@ -112,4 +169,13 @@
 .emergency-active header {
     background-color: #0F172A !important;
     border-bottom: 1px solid #1E293B;
+}
+
+/* Dark Mode Scrollbars */
+.emergency-active ::-webkit-scrollbar-thumb {
+    background: #475569; /* slate-600 */
+}
+
+.emergency-active ::-webkit-scrollbar-thumb:hover {
+    background: #64748b; /* slate-500 */
 }
