@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../supabase';
 import { useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Calendar, MessageSquare, LogOut, Trash2, Clock, Smartphone, User, TrendingUp, DollarSign, Users, Activity, Mail, Plus, Edit2, Battery, Droplets, Usb, Disc, Wrench, Cpu, Wifi, Camera, Speaker, X, Image as ImageIcon, Database, Laptop, Gamepad2, Tablet, Menu, Layers, Phone, Save, Settings, AlertTriangle, Power, Store } from 'lucide-react';
+import { LayoutDashboard, Calendar, MessageSquare, LogOut, Trash2, Clock, Smartphone, User, TrendingUp, DollarSign, Users, Activity, Mail, Plus, Edit2, Battery, Droplets, Usb, Disc, Wrench, Cpu, Wifi, Camera, Speaker, X, Image as ImageIcon, Database, Laptop, Gamepad2, Tablet, Menu, Layers, Phone, Save, Settings, AlertTriangle, Power, Store, Check, Upload, Loader } from 'lucide-react';
 
 import { useShop } from '../../context/ShopContext';
 
@@ -13,6 +13,9 @@ export default function AdminDashboard() {
     const [services, setServices] = useState([]);
     const [menuItems, setMenuItems] = useState([]); // Dynamic Header Menu Items
     const [models, setModels] = useState([]); // Device Models
+    const [inventory, setInventory] = useState([]); // Store Inventory
+    const [editingProduct, setEditingProduct] = useState(null); // For Inventory Edit Modal
+    const [uploading, setUploading] = useState(false); // Image Upload State
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [editingService, setEditingService] = useState(null); // {id, label, price, icon_key}
@@ -38,6 +41,7 @@ export default function AdminDashboard() {
         { id: 'services', label: 'Service Catalog', icon: Wrench },
         { id: 'menu', label: 'Header Menu', icon: Menu },
         { id: 'models', label: 'Device Models', icon: Layers },
+        { id: 'inventory', label: 'Shop Inventory', icon: Store },
         { id: 'settings', label: 'Site Settings', icon: Settings },
     ];
 
@@ -68,11 +72,14 @@ export default function AdminDashboard() {
             const { data: modelData, error: modelError } = await supabase.from('device_models').select('*').order('created_at', { ascending: false }).limit(200);
             if (modelError) throw modelError;
 
+            const { data: productData, error: productError } = await supabase.from('device_inventory').select('*').order('created_at', { ascending: false });
+
             if (bookingData) setBookings(bookingData);
             if (ticketData) setTickets(ticketData);
             if (serviceData) setServices(serviceData);
             if (menuData) setMenuItems(menuData);
             if (modelData) setModels(modelData);
+            if (productData) setInventory(productData);
         } catch (error) {
             console.error('Fetch error:', error);
             // alert('Error loading data: ' + error.message);
@@ -99,6 +106,37 @@ export default function AdminDashboard() {
                 right: window.innerWidth - rect.left + 10
             }
         });
+    };
+
+    const handleImageUpload = async (e) => {
+        try {
+            setUploading(true);
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${Math.random()}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            // Upload to Supabase 'images' bucket
+            const { error: uploadError } = await supabase.storage
+                .from('images')
+                .upload(filePath, file);
+
+            if (uploadError) throw uploadError;
+
+            // Get Public URL
+            const { data } = supabase.storage.from('images').getPublicUrl(filePath);
+
+            // Update the editing product state with new image URL
+            setEditingProduct(prev => ({ ...prev, image_url: data.publicUrl }));
+
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Error uploading image! \n\nMake sure you have created the "images" storage bucket in Supabase (Public Access).');
+        } finally {
+            setUploading(false);
+        }
     };
 
     const confirmDelete = async () => {
@@ -1030,6 +1068,79 @@ export default function AdminDashboard() {
                         </div>
                     </div>
                 )}
+                {/* Shop Inventory Tab */}
+                {activeTab === 'inventory' && (
+                    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
+                        <div className="flex justify-between items-center">
+                            <div>
+                                <h2 className="text-2xl font-black text-slate-800">Shop Inventory</h2>
+                                <p className="text-slate-500">Manage device sales and listings.</p>
+                            </div>
+                            <button
+                                onClick={() => setEditingProduct({})}
+                                className="px-4 py-2 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 flex items-center gap-2"
+                            >
+                                <Plus size={18} /> Add Device
+                            </button>
+                        </div>
+
+                        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                            <table className="w-full text-left border-collapse">
+                                <thead className="bg-slate-50 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                    <tr>
+                                        <th className="p-4 pl-6">Device</th>
+                                        <th className="p-4">Price</th>
+                                        <th className="p-4">Condition</th>
+                                        <th className="p-4">Status</th>
+                                        <th className="p-4 text-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="text-sm font-medium text-slate-600 divide-y divide-slate-50">
+                                    {inventory.length === 0 ? (
+                                        <tr>
+                                            <td colSpan="5" className="p-8 text-center text-slate-400">
+                                                No devices listed. <button onClick={() => setEditingProduct({})} className="text-blue-500 hover:underline">Add one now</button>.
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        inventory.map(item => (
+                                            <tr key={item.id} className="hover:bg-slate-50 transition-colors">
+                                                <td className="p-4 pl-6">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center overflow-hidden border border-slate-200">
+                                                            {item.image_url ? (
+                                                                <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                                                            ) : (
+                                                                <Smartphone size={18} className="text-slate-400" />
+                                                            )}
+                                                        </div>
+                                                        <div>
+                                                            <div className="font-bold text-slate-800">{item.title}</div>
+                                                            <div className="text-xs text-slate-400">{item.brand} • {item.storage}</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td className="p-4 font-bold text-slate-800">${item.price}</td>
+                                                <td className="p-4"><span className="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">{item.condition}</span></td>
+                                                <td className="p-4">
+                                                    <span className={`px-2 py-1 rounded text-xs font-bold flex w-fit items-center gap-1 ${item.status === 'Available' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                                        }`}>
+                                                        {item.status === 'Available' ? <Check size={12} /> : <X size={12} />}
+                                                        {item.status}
+                                                    </span>
+                                                </td>
+                                                <td className="p-4 text-right flex justify-end gap-2">
+                                                    <button onClick={() => setEditingProduct(item)} className="p-2 text-slate-300 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-colors"><Edit2 size={16} /></button>
+                                                    <button onClick={(e) => handleDelete('device_inventory', item.id, e)} className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"><Trash2 size={16} /></button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
                 {/* Site Settings Tab */}
                 {activeTab === 'settings' && (
                     <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 animate-in fade-in slide-in-from-bottom-4">
@@ -1039,24 +1150,45 @@ export default function AdminDashboard() {
                                     <h2 className="text-xl md:text-2xl font-black text-slate-800">Global Site Settings</h2>
                                     <p className="text-sm md:text-base text-slate-500">Update your business information across the entire website.</p>
                                 </div>
-                                <button
-                                    onClick={async () => {
-                                        try {
-                                            await updateShopData(settingsForm);
-                                            alert('Settings saved successfully!');
-                                        } catch (error) {
-                                            if (error.message.includes('Could not find the table') || error.message.includes('relation "public.site_settings" does not exist')) {
-                                                alert("Table Missing! \n\nIt looks like the 'site_settings' table hasn't been created yet. \n\nI will open the Database Setup modal for you. Please copy the SQL and run it in Supabase.");
-                                                setShowSqlModal(true);
-                                            } else {
-                                                alert('Error saving settings: ' + error.message);
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => setShowSqlModal(true)}
+                                        className="px-4 py-3 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 flex items-center gap-2"
+                                        title="View Database SQL"
+                                    >
+                                        <Database size={18} /> <span className="hidden md:inline">DB Setup</span>
+                                    </button>
+                                    <button
+                                        onClick={async () => {
+                                            // Auto-generate Embed Map URL from Address to ensure it works even if user pastes a shortlink
+                                            const addr = settingsForm.address;
+                                            const fullAddr = `${addr.street}, ${addr.city}, ${addr.state} ${addr.zip}`;
+                                            const encoded = encodeURIComponent(fullAddr);
+                                            const autoEmbed = `https://maps.google.com/maps?q=${encoded}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+
+                                            const updatedSettings = {
+                                                ...settingsForm,
+                                                name: `${settingsForm.branding.namePrefix || ''} ${settingsForm.branding.nameHighlight || ''}`.trim(),
+                                                googleMapEmbed: autoEmbed
+                                            };
+                                            try {
+                                                await updateShopData(updatedSettings);
+                                                setSettingsForm(updatedSettings);
+                                                alert('Settings saved successfully!');
+                                            } catch (error) {
+                                                if (error.message.includes('Could not find the table') || error.message.includes('relation "public.site_settings" does not exist')) {
+                                                    alert("Table Missing! \n\nIt looks like the 'site_settings' table hasn't been created yet. \n\nI will open the Database Setup modal for you. Please copy the SQL and run it in Supabase.");
+                                                    setShowSqlModal(true);
+                                                } else {
+                                                    alert('Error saving settings: ' + error.message);
+                                                }
                                             }
-                                        }
-                                    }}
-                                    className="w-full md:w-auto px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 flex items-center justify-center gap-2"
-                                >
-                                    <Save size={18} /> Save Changes
-                                </button>
+                                        }}
+                                        className="w-full md:w-auto px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 flex items-center justify-center gap-2"
+                                    >
+                                        <Save size={18} /> Save Changes
+                                    </button>
+                                </div>
 
                             </div>
 
@@ -1100,15 +1232,7 @@ export default function AdminDashboard() {
                                         <div className="w-1 h-6 bg-blue-500 rounded-full"></div> General Information
                                     </h3>
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div>
-                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Shop Name</label>
-                                            <input
-                                                type="text"
-                                                value={settingsForm.name}
-                                                onChange={e => setSettingsForm({ ...settingsForm, name: e.target.value })}
-                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:border-blue-500 outline-none"
-                                            />
-                                        </div>
+
                                         <div>
                                             <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Tagline</label>
                                             <input
@@ -1163,6 +1287,79 @@ export default function AdminDashboard() {
                                                 className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 focus:border-blue-500 outline-none"
                                             />
                                         </div>
+                                    </div>
+                                </section>
+
+                                {/* Business Hours */}
+                                <section>
+                                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                        <div className="w-1 h-6 bg-yellow-500 rounded-full"></div> Business Hours
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Weekdays</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.hours?.weekdays || ''}
+                                                onChange={e => setSettingsForm({ ...settingsForm, hours: { ...settingsForm.hours, weekdays: e.target.value } })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                placeholder="e.g. 8:00 AM - 8:00 PM"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Saturday</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.hours?.saturday || ''}
+                                                onChange={e => setSettingsForm({ ...settingsForm, hours: { ...settingsForm.hours, saturday: e.target.value } })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                placeholder="e.g. 9:00 AM - 6:00 PM"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Sunday</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.hours?.sunday || ''}
+                                                onChange={e => setSettingsForm({ ...settingsForm, hours: { ...settingsForm.hours, sunday: e.target.value } })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                placeholder="e.g. Closed"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Display Summary</label>
+                                            <input
+                                                type="text"
+                                                value={settingsForm.hours?.display || ''}
+                                                onChange={e => setSettingsForm({ ...settingsForm, hours: { ...settingsForm.hours, display: e.target.value } })}
+                                                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                placeholder="Short summary for home page"
+                                            />
+                                        </div>
+                                    </div>
+                                </section>
+
+                                {/* Social Media */}
+                                <section>
+                                    <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                        <div className="w-1 h-6 bg-blue-500 rounded-full"></div> Social Media
+                                    </h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        {['facebook', 'twitter', 'instagram', 'linkedin'].map(platform => (
+                                            <div key={platform}>
+                                                <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">{platform}</label>
+                                                <input
+                                                    type="text"
+                                                    value={settingsForm.socials?.[platform] || ''}
+                                                    onChange={e => setSettingsForm({
+                                                        ...settingsForm,
+                                                        socials: { ...settingsForm.socials, [platform]: e.target.value }
+                                                    })}
+                                                    className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"
+                                                    placeholder={`https://${platform}.com/...`}
+                                                />
+                                            </div>
+                                        ))}
                                     </div>
                                 </section>
 
@@ -1247,7 +1444,24 @@ export default function AdminDashboard() {
                                             </div>
                                         </div>
                                         <div className="md:col-span-2">
-                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">Google Maps Link</label>
+                                            <div className="flex justify-between items-center mb-1">
+                                                <label className="text-xs font-bold text-slate-400 uppercase">Google Maps Link</label>
+                                                <button
+                                                    onClick={() => {
+                                                        const addr = settingsForm.address;
+                                                        const fullAddr = `${addr.street}, ${addr.city}, ${addr.state} ${addr.zip}`;
+                                                        const encoded = encodeURIComponent(fullAddr);
+                                                        setSettingsForm({
+                                                            ...settingsForm,
+                                                            mapLink: `https://www.google.com/maps/search/?api=1&query=${encoded}`,
+                                                            googleMapEmbed: `https://maps.google.com/maps?q=${encoded}&t=&z=15&ie=UTF8&iwloc=&output=embed`
+                                                        });
+                                                    }}
+                                                    className="text-[10px] font-bold text-blue-500 hover:underline uppercase"
+                                                >
+                                                    Auto-Generate from Address
+                                                </button>
+                                            </div>
                                             <input
                                                 type="text"
                                                 value={settingsForm.mapLink}
@@ -1308,7 +1522,44 @@ alter table site_settings enable row level security;
 drop policy if exists "Public Read" on site_settings;
 create policy "Public Read" on site_settings for select using (true);
 drop policy if exists "Admin Write" on site_settings;
-create policy "Admin Write" on site_settings for all to authenticated using (true);`}
+create policy "Admin Write" on site_settings for all to authenticated using (true);
+
+-- 4. Device Inventory (Shop)
+create table if not exists device_inventory (
+  id uuid default gen_random_uuid() primary key,
+  title text not null,
+  brand text default 'Apple',
+  model text,
+  price numeric default 0,
+  condition text default 'Refurbished',
+  storage text,
+  color text,
+  status text default 'Available',
+  image_url text,
+  description text,
+  category text default 'Phones',
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+alter table device_inventory enable row level security;
+drop policy if exists "Public Read" on device_inventory;
+create policy "Public Read" on device_inventory for select using (true);
+drop policy if exists "Admin Write" on device_inventory;
+create policy "Admin Write" on device_inventory for all to authenticated using (true);
+
+-- 5. Storage (Images)
+insert into storage.buckets (id, name, public) 
+values ('images', 'images', true) 
+on conflict (id) do nothing;
+
+drop policy if exists "Public Access" on storage.objects;
+create policy "Public Access" 
+on storage.objects for select 
+using ( bucket_id = 'images' );
+
+drop policy if exists "Auth Upload" on storage.objects;
+create policy "Auth Upload" 
+on storage.objects for insert 
+with check ( bucket_id = 'images' and auth.role() = 'authenticated' );` }
                                     </pre>
                                     <button
                                         onClick={() => {
@@ -1348,7 +1599,43 @@ alter table site_settings enable row level security;
 drop policy if exists "Public Read" on site_settings;
 create policy "Public Read" on site_settings for select using (true);
 drop policy if exists "Admin Write" on site_settings;
-create policy "Admin Write" on site_settings for all to authenticated using (true);`);
+create policy "Admin Write" on site_settings for all to authenticated using (true);
+-- 4. Device Inventory (Shop)
+create table if not exists device_inventory (
+  id uuid default gen_random_uuid() primary key,
+  title text not null,
+  brand text default 'Apple',
+  model text,
+  price numeric default 0,
+  condition text default 'Refurbished',
+  storage text,
+  color text,
+  status text default 'Available',
+  image_url text,
+  description text,
+  category text default 'Phones',
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+alter table device_inventory enable row level security;
+drop policy if exists "Public Read" on device_inventory;
+create policy "Public Read" on device_inventory for select using (true);
+drop policy if exists "Admin Write" on device_inventory;
+create policy "Admin Write" on device_inventory for all to authenticated using (true);
+
+-- 5. Storage (Images)
+insert into storage.buckets (id, name, public) 
+values ('images', 'images', true) 
+on conflict (id) do nothing;
+
+drop policy if exists "Public Access" on storage.objects;
+create policy "Public Access" 
+on storage.objects for select 
+using ( bucket_id = 'images' );
+
+drop policy if exists "Auth Upload" on storage.objects;
+create policy "Auth Upload" 
+on storage.objects for insert 
+with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
                                             alert("Copied to clipboard!");
                                         }}
                                         className="absolute top-2 right-2 bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity"
@@ -1365,6 +1652,148 @@ create policy "Admin Write" on site_settings for all to authenticated using (tru
                     )
                 }
             </main >
+
+            {/* Inventory Edit Modal */}
+            {editingProduct && (
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto custom-scrollbar">
+                        <div className="flex justify-between items-center mb-6">
+                            <h3 className="text-xl font-bold text-slate-800">{editingProduct.id ? 'Edit Device' : 'Add New Device'}</h3>
+                            <button onClick={() => setEditingProduct(null)} className="text-slate-400 hover:text-slate-600"><X size={24} /></button>
+                        </div>
+                        <form onSubmit={async (e) => {
+                            e.preventDefault();
+                            const formData = new FormData(e.target);
+                            const product = Object.fromEntries(formData.entries());
+                            try {
+                                if (editingProduct.id) {
+                                    const { error } = await supabase.from('device_inventory').update(product).eq('id', editingProduct.id);
+                                    if (error) throw error;
+                                } else {
+                                    const { error } = await supabase.from('device_inventory').insert([product]);
+                                    if (error) throw error;
+                                }
+                                fetchData();
+                                setEditingProduct(null);
+                            } catch (err) {
+                                if (err.message.includes('relation "public.device_inventory" does not exist') || err.code === '42P01') {
+                                    alert("Table Missing! please run the database setup SQL in the settings tab.");
+                                    setShowSqlModal(true);
+                                } else {
+                                    alert('Error saving product: ' + err.message);
+                                }
+                            }
+                        }} className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Title (e.g. iPhone 13 Pro)</label>
+                                <input name="title" required defaultValue={editingProduct.title} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700" />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Brand</label>
+                                    <select name="brand" defaultValue={editingProduct.brand || ''} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700">
+                                        <option value="" disabled>Select Brand</option>
+                                        {[...new Set(models.map(m => m.brand))].sort().map(brand => (
+                                            <option key={brand} value={brand}>{brand}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Category</label>
+                                    <select name="category" defaultValue={editingProduct.category || ''} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700">
+                                        <option value="" disabled>Select Category</option>
+                                        {[...new Set(models.map(m => m.category))].sort().map(cat => (
+                                            <option key={cat} value={cat}>{cat}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Price ($)</label>
+                                    <input name="price" type="number" step="0.01" required defaultValue={editingProduct.price} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Condition</label>
+                                    <select name="condition" defaultValue={editingProduct.condition || 'Refurbished'} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700">
+                                        <option value="New">New</option>
+                                        <option value="Refurbished">Refurbished</option>
+                                        <option value="Used">Used</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Storage</label>
+                                    <input name="storage" defaultValue={editingProduct.storage} placeholder="e.g. 128GB" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700" />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Color</label>
+                                    <input name="color" defaultValue={editingProduct.color} placeholder="e.g. Midnight" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Device Image</label>
+                                <div className="space-y-3">
+                                    {editingProduct.image_url && (
+                                        <div className="relative w-full h-32 bg-slate-50 rounded-xl overflow-hidden border border-slate-200 group">
+                                            <img src={editingProduct.image_url} alt="Preview" className="w-full h-full object-contain mix-blend-multiply" />
+                                            <button
+                                                type="button"
+                                                onClick={() => setEditingProduct(prev => ({ ...prev, image_url: '' }))}
+                                                className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    <div className="flex items-center gap-3">
+                                        <label className={`flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border-2 border-dashed border-slate-200 cursor-pointer hover:border-primary hover:bg-blue-50 transition-all group ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                className="hidden"
+                                                onChange={handleImageUpload}
+                                                disabled={uploading}
+                                            />
+                                            {uploading ? (
+                                                <Loader size={18} className="animate-spin text-primary" />
+                                            ) : (
+                                                <Upload size={18} className="text-slate-400 group-hover:text-primary transition-colors" />
+                                            )}
+                                            <span className="text-sm font-bold text-slate-500 group-hover:text-primary transition-colors">
+                                                {uploading ? 'Uploading...' : 'Upload New Image'}
+                                            </span>
+                                        </label>
+                                        <input
+                                            name="image_url"
+                                            value={editingProduct.image_url || ''}
+                                            onChange={(e) => setEditingProduct(prev => ({ ...prev, image_url: e.target.value }))}
+                                            placeholder="Or paste URL..."
+                                            className="flex-1 p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700 text-sm"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Status</label>
+                                <select name="status" defaultValue={editingProduct.status || 'Available'} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700">
+                                    <option value="Available">Available</option>
+                                    <option value="Out of Stock">Out of Stock</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Description</label>
+                                <textarea name="description" rows="3" defaultValue={editingProduct.description} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl font-bold text-slate-700"></textarea>
+                            </div>
+                            <button type="submit" className="w-full py-4 bg-primary text-white font-bold rounded-xl hover:bg-primary/90 shadow-lg shadow-blue-200 transition-all">
+                                {editingProduct.id ? 'Save Changes' : 'Add Device'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
 
             {/* Delete Confirmation Modal */}
             {/* Delete Confirmation Popover */}

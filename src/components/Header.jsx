@@ -73,7 +73,7 @@ export default function Header({ darkMode, setDarkMode }) {
                 </Link>
 
                 {/* Desktop Nav */}
-                <nav className="hidden lg:flex items-center gap-8">
+                <nav className="hidden lg:flex items-center gap-4">
 
                     {/* Services Dropdown */}
                     <div className="relative group">
@@ -110,6 +110,10 @@ export default function Header({ darkMode, setDarkMode }) {
                         </div>
                     </div>
 
+
+                    <Link to="/shop" className="text-sm font-bold text-secondary hover:text-primary transition-colors flex items-center gap-1">
+                        SHOP <span className="bg-orange-500 text-white text-[9px] px-1.5 py-0.5 rounded-full animate-pulse">NEW</span>
+                    </Link>
                     <Link to="/about" className="text-sm font-bold text-secondary hover:text-primary transition-colors">ABOUT</Link>
                     <Link to="/contact" className="text-sm font-bold text-secondary hover:text-primary transition-colors">CONTACT US</Link>
                 </nav>

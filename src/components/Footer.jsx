@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
-import { SHOP_DATA } from '../data';
+import { useShop } from '../context/ShopContext';
 
 export default function Footer() {
     const navigate = useNavigate();
-    const [email, setEmail] = React.useState('');
+    const { shopData } = useShop();
+    const [email, setEmail] = useState('');
 
     const handleSubscribe = (e) => {
         e.preventDefault();
@@ -22,19 +23,19 @@ export default function Footer() {
                     <div className="space-y-6">
                         <Link to="/" className="inline-block">
                             <span className="text-2xl font-black text-white tracking-tighter uppercase">
-                                {SHOP_DATA.branding.namePrefix} <span className="text-primary">{SHOP_DATA.branding.nameHighlight}</span>
+                                {shopData.branding.namePrefix} <span className="text-primary">{shopData.branding.nameHighlight}</span>
                             </span>
-                            <span className="block text-[10px] font-bold text-slate-400 tracking-[0.2em] uppercase mt-1">{SHOP_DATA.branding.subDetails}</span>
+                            <span className="block text-[10px] font-bold text-slate-400 tracking-[0.2em] uppercase mt-1">{shopData.branding.subDetails}</span>
                         </Link>
                         <p className="text-slate-400 text-sm leading-relaxed">
-                            {SHOP_DATA.tagline} Authorized partners with major manufacturers. We save devices and the planet.
+                            {shopData.tagline} Authorized partners with major manufacturers. We save devices and the planet.
                         </p>
                         <div className="flex gap-4">
                             {[
-                                { Icon: Facebook, link: SHOP_DATA.socials.facebook },
-                                { Icon: Twitter, link: SHOP_DATA.socials.twitter },
-                                { Icon: Instagram, link: SHOP_DATA.socials.instagram },
-                                { Icon: Linkedin, link: SHOP_DATA.socials.linkedin }
+                                { Icon: Facebook, link: shopData.socials.facebook },
+                                { Icon: Twitter, link: shopData.socials.twitter },
+                                { Icon: Instagram, link: shopData.socials.instagram },
+                                { Icon: Linkedin, link: shopData.socials.linkedin }
                             ].map(({ Icon, link }, i) => (
                                 <a key={i} href={link} className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors text-white">
                                     <Icon size={16} />
@@ -73,15 +74,15 @@ export default function Footer() {
                         <div className="space-y-4 mb-6">
                             <div className="flex items-start gap-3 text-sm text-slate-400">
                                 <MapPin size={18} className="text-primary mt-0.5 shrink-0" />
-                                <span>{SHOP_DATA.address.street}, {SHOP_DATA.address.city}, {SHOP_DATA.address.state}</span>
+                                <span>{shopData.address.street}, {shopData.address.city}, {shopData.address.state}</span>
                             </div>
                             <div className="flex items-center gap-3 text-sm text-slate-400">
                                 <Phone size={18} className="text-primary shrink-0" />
-                                <span>{SHOP_DATA.displayPhone}</span>
+                                <span>{shopData.displayPhone}</span>
                             </div>
                             <div className="flex items-center gap-3 text-sm text-slate-400">
                                 <Mail size={18} className="text-primary shrink-0" />
-                                <a href={`mailto:${SHOP_DATA.email}`} className="hover:text-white transition-colors">{SHOP_DATA.email}</a>
+                                <a href={`mailto:${shopData.email}`} className="hover:text-white transition-colors">{shopData.email}</a>
                             </div>
                         </div>
 
@@ -105,7 +106,7 @@ export default function Footer() {
 
                 {/* Bottom Bar */}
                 <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500 font-medium">
-                    <p>&copy; 2024 Mr. Fix My Phone. All rights reserved.</p>
+                    <p>&copy; {new Date().getFullYear()} {shopData.name}. All rights reserved.</p>
                     <div className="flex gap-6">
                         <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
                         <a href="#" className="hover:text-white transition-colors">Terms of Service</a>

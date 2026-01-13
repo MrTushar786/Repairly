@@ -317,11 +317,11 @@ export default function Home() {
                                     <p className="text-sm text-text-muted font-medium mb-3">{shopData.address.street}<br />{shopData.address.city}, {shopData.address.state} {shopData.address.zip}</p>
 
                                     <div className="flex items-center gap-2 mb-4">
-                                        <span className="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[10px] font-bold uppercase tracking-wide flex items-center gap-1">
-                                            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-                                            Open Now
+                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wide flex items-center gap-1 ${shopData.isOpen ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                            <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${shopData.isOpen ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                                            {shopData.isOpen ? 'Open Now' : 'Closed'}
                                         </span>
-                                        <span className="text-xs text-text-muted font-bold">• Closes 8 PM</span>
+                                        <span className="text-xs text-text-muted font-bold">• {shopData.hours?.display || 'See Hours'}</span>
                                     </div>
 
                                     <button onClick={() => navigate('/booking')} className="w-full py-2.5 bg-secondary text-white text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-primary transition-colors shadow-lg">

@@ -1,11 +1,13 @@
-import React from 'react';
-import { SHOP_DATA } from '../data';
+import React, { useEffect } from 'react';
+import { useShop } from '../context/ShopContext';
 import { Building2, Recycle, Users, Award } from 'lucide-react';
 
 export default function About() {
-    React.useEffect(() => {
-        document.title = "About Us | Mr. Fix My Phone";
-    }, []);
+    const { shopData } = useShop();
+
+    useEffect(() => {
+        document.title = `About Us | ${shopData.name}`;
+    }, [shopData.name]);
 
     return (
         <div className="pt-32 pb-40 lg:pt-48 bg-white overflow-hidden">
@@ -19,7 +21,7 @@ export default function About() {
                         Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">Tech Triage</span> Team.
                     </h1>
                     <p className="text-text-muted text-xl max-w-2xl mx-auto leading-relaxed">
-                        At <strong className="text-secondary">Mr. Fix My Phone</strong>, we don't just swap parts. We diagnose, resuscitate, and rapid-discharge your critical devices.
+                        At <strong className="text-secondary">{shopData.name}</strong>, we don't just swap parts. We diagnose, resuscitate, and rapid-discharge your critical devices.
                     </p>
                 </div>
 

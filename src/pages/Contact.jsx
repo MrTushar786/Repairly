@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react'; // Added useEffect
-import { Mail, Phone, MapPin, MessageSquare, Clock, Send, ChevronDown, ChevronUp, HelpCircle, User } from 'lucide-react'; // Added User
-import { SHOP_DATA } from '../data';
-import { Link, useNavigate } from 'react-router-dom'; // Added useNavigate
-
+import React, { useState, useEffect } from 'react';
+import { Mail, Phone, MapPin, MessageSquare, Clock, Send, ChevronDown, ChevronUp, HelpCircle, User } from 'lucide-react';
+import { useShop } from '../context/ShopContext';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
 
 export default function Contact() {
+    const { shopData } = useShop();
     const [formState, setFormState] = useState({ name: '', email: '', subject: 'General Inquiry', message: '' });
     const [openFaq, setOpenFaq] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
-    React.useEffect(() => {
-        document.title = "Contact Us | Mr. Fix My Phone";
+    useEffect(() => {
+        document.title = `Contact Us | ${shopData.name}`;
 
         // Check Auth
         supabase.auth.getUser().then(({ data: { user } }) => {
@@ -26,7 +26,7 @@ export default function Contact() {
                 }));
             }
         });
-    }, []);
+    }, [shopData.name]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -57,7 +57,7 @@ export default function Contact() {
         { q: "Do I need an appointment?", a: "Walk-ins are always welcome! However, booking an appointment online guarantees your spot and reduces wait time." },
         { q: "How long do repairs take?", a: "Most standard repairs (screens, batteries) are completed within 45 minutes. Complex board repairs may take 24-48 hours." },
         { q: "Is there a warranty?", a: "Yes! We offer a solid 1-year warranty on all parts and labor for screen and battery replacements." },
-        { q: "will I lose my data?", a: "In 99% of cases, your data is safe. However, we always recommend backing up your device before any repair service." },
+        { q: "Will I lose my data?", a: "In 99% of cases, your data is safe. However, we always recommend backing up your device before any repair service." },
     ];
 
     return (
@@ -72,7 +72,7 @@ export default function Contact() {
                         We're Here to <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">Help</span>.
                     </h1>
                     <p className="text-text-muted text-xl max-w-2xl mx-auto leading-relaxed">
-                        Got a broken device or a burning question? reach out to our team of experts.
+                        Got a broken device or a burning question? Reach out to our team of experts.
                     </p>
                 </div>
 
@@ -90,7 +90,7 @@ export default function Contact() {
                                     <div>
                                         <h3 className="font-bold text-secondary text-lg">Call Support</h3>
                                         <p className="text-text-muted text-sm mb-1">M-F 8am - 8pm EST</p>
-                                        <a href={`tel:${SHOP_DATA.phone}`} className="text-primary font-bold text-lg hover:underline">{SHOP_DATA.displayPhone}</a>
+                                        <a href={`tel:${shopData.phone}`} className="text-primary font-bold text-lg hover:underline">{shopData.displayPhone}</a>
                                     </div>
                                 </div>
                             </div>
@@ -103,7 +103,7 @@ export default function Contact() {
                                     <div>
                                         <h3 className="font-bold text-secondary text-lg">Email Us</h3>
                                         <p className="text-text-muted text-sm mb-1">Response within 2 hours</p>
-                                        <a href={`mailto:${SHOP_DATA.email}`} className="text-primary font-bold hover:underline">{SHOP_DATA.email}</a>
+                                        <a href={`mailto:${shopData.email}`} className="text-primary font-bold hover:underline">{shopData.email}</a>
                                     </div>
                                 </div>
                             </div>
@@ -115,15 +115,15 @@ export default function Contact() {
                             <div className="relative z-10 bg-white/5 backdrop-blur-sm p-6 rounded-xl h-full flex flex-col justify-between min-h-[220px]">
                                 <div>
                                     <h3 className="text-white font-bold text-lg flex items-center gap-2">
-                                        <MapPin className="text-primary" size={20} /> {SHOP_DATA.name}
+                                        <MapPin className="text-primary" size={20} /> {shopData.name}
                                     </h3>
-                                    <p className="text-slate-400 text-sm mt-1">{SHOP_DATA.address.street}<br />{SHOP_DATA.address.city}, {SHOP_DATA.address.state} {SHOP_DATA.address.zip}</p>
+                                    <p className="text-slate-400 text-sm mt-1">{shopData.address.street}<br />{shopData.address.city}, {shopData.address.state} {shopData.address.zip}</p>
                                 </div>
                                 <iframe
                                     className="w-full h-24 rounded-lg mt-4 opacity-80 hover:opacity-100 transition-opacity"
                                     style={{ border: 0 }}
                                     loading="lazy"
-                                    src={SHOP_DATA.googleMapEmbed}
+                                    src={shopData.googleMapEmbed}
                                 ></iframe>
                             </div>
                         </div>

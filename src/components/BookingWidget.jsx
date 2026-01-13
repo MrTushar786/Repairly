@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Calendar, ChevronRight, Smartphone, Check, ArrowLeft, Laptop, Tablet, Gamepad2, Wrench, Battery, Droplets, Usb, Disc, Cpu, Wifi, Camera, Speaker, User } from 'lucide-react';
-import { DEVICE_MODELS as STATIC_MODELS } from '../data';
+import { useShop } from '../context/ShopContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
 
@@ -17,12 +17,11 @@ export default function BookingWidget() {
     const [step, setStep] = useState(1);
     const [user, setUser] = useState(null); // Auth user
 
+    const { deviceModels } = useShop();
+
     // Dynamic Services
     const [services, setServices] = useState([]);
     const [loadingServices, setLoadingServices] = useState(true);
-
-    // Dynamic Models
-    const [deviceModels, setDeviceModels] = useState(STATIC_MODELS);
 
     // State
     const [repairType, setRepairType] = useState('');
@@ -55,21 +54,7 @@ export default function BookingWidget() {
             }
             setLoadingServices(false);
 
-            // 3. Fetch Models
-            const { data: modelData } = await supabase.from('device_models').select('*');
-            if (modelData && modelData.length > 0) {
-                const merged = structuredClone(STATIC_MODELS);
-                modelData.forEach(m => {
-                    const { category, brand, model } = m;
-                    if (!merged[category]) merged[category] = {};
-                    if (!merged[category][brand]) merged[category][brand] = [];
-                    // Avoid duplicates
-                    if (!merged[category][brand].includes(model)) {
-                        merged[category][brand].push(model);
-                    }
-                });
-                setDeviceModels(merged);
-            }
+
         };
         init();
     }, []);
