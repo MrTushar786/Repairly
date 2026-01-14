@@ -14,15 +14,36 @@ export default function AdminLogin() {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
+            // SIMPLE TABLE CHECK (Decoupled from Supabase Auth)
+            // We check the 'admin_users' table directly for a matching email/password pair.
 
-            if (error) throw error;
+            const { data, error } = await supabase
+                .from('admin_users')
+                .select('*')
+                .eq('email', email)
+                .eq('password', password) // Validating against stored text password as requested
+                .single();
+
+            if (error || !data) {
+                throw new Error('Invalid Admin Credentials');
+            }
+
+            // Success! 
+            // In a real production app, we would set a session token here.
+            // For now, we trust the successful DB query for access.
+
+            // Success! 
+            await supabase.auth.signOut();
+            localStorage.setItem('repairly_admin_session', JSON.stringify({
+                id: data.id,
+                email: data.email,
+                timestamp: new Date().toISOString()
+            }));
+
             navigate('/admin/dashboard');
+
         } catch (error) {
-            alert(error.message);
+            alert('Login Failed: ' + error.message);
         } finally {
             setLoading(false);
         }
