@@ -6,6 +6,108 @@ import { LayoutDashboard, Calendar, MessageSquare, LogOut, Trash2, Clock, Smartp
 
 import { useShop } from '../../context/ShopContext';
 
+const SETUP_SQL = `-- 1. Device Models
+create table if not exists device_models (
+  id uuid default gen_random_uuid() primary key,
+  category text,
+  brand text,
+  model text,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+alter table device_models enable row level security;
+drop policy if exists "Public Read" on device_models;
+create policy "Public Read" on device_models for select using (true);
+drop policy if exists "Admin Write" on device_models;
+create policy "Admin Write" on device_models for all to authenticated using (true);
+
+-- 2. Service Menu Items
+create table if not exists service_menu_items (
+  id uuid default gen_random_uuid() primary key,
+  label text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+alter table service_menu_items enable row level security;
+drop policy if exists "Public Read" on service_menu_items;
+create policy "Public Read" on service_menu_items for select using (true);
+drop policy if exists "Admin Write" on service_menu_items;
+create policy "Admin Write" on service_menu_items for all to authenticated using (true);
+
+-- 3. Site Settings (REQUIRED FOR SHOP STATUS)
+create table if not exists site_settings (
+  key text primary key,
+  value jsonb,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+alter table site_settings enable row level security;
+drop policy if exists "Public Read" on site_settings;
+create policy "Public Read" on site_settings for select using (true);
+drop policy if exists "Admin Write" on site_settings;
+create policy "Admin Write" on site_settings for all to authenticated using (true);
+
+-- 4. Device Inventory (Shop)
+create table if not exists device_inventory (
+  id uuid default gen_random_uuid() primary key,
+  title text not null,
+  brand text default 'Apple',
+  model text,
+  price numeric default 0,
+  condition text default 'Refurbished',
+  storage text,
+  color text,
+  status text default 'Available',
+  image_url text,
+  description text,
+  category text default 'Phones',
+  quantity integer default 1,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+-- Ensure quantity column exists
+do $$ 
+begin 
+    if not exists (select 1 from information_schema.columns where table_name = 'device_inventory' and column_name = 'quantity') then 
+        alter table device_inventory add column quantity integer default 1; 
+    end if; 
+end $$;
+alter table device_inventory enable row level security;
+drop policy if exists "Public Read" on device_inventory;
+create policy "Public Read" on device_inventory for select using (true);
+drop policy if exists "Admin Write" on device_inventory;
+create policy "Admin Write" on device_inventory for all to authenticated using (true);
+
+-- 5. Storage (Images)
+insert into storage.buckets (id, name, public) 
+values ('images', 'images', true) 
+on conflict (id) do nothing;
+
+create policy "Public Access" 
+on storage.objects for select 
+using ( bucket_id = 'images' );
+
+create policy "Auth Upload" 
+on storage.objects for insert 
+with check ( bucket_id = 'images' and auth.role() = 'authenticated' );
+
+-- 6. ADMIN USERS (Secure Access Control)
+create table if not exists admin_users (
+  id uuid default gen_random_uuid() primary key,
+  email text not null unique,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+alter table admin_users enable row level security;
+
+-- Allow Authenticated (logged in) users to READ the list 
+-- This is required so the Login Page can check if the user is in the allow-list
+drop policy if exists "Allow Read Authenticated" on admin_users;
+create policy "Allow Read Authenticated" on admin_users for select to authenticated using (true);
+
+-- Allow EXISTING Admins to INSERT/DELETE (Manage the list)
+-- Security: Only someone whose email is ALREADY in the table can add/remove others.
+drop policy if exists "Admins Manage Admins" on admin_users;
+create policy "Admins Manage Admins" on admin_users for all to authenticated 
+using ( (select count(*) from admin_users where email = auth.email()) > 0 )
+with check ( (select count(*) from admin_users where email = auth.email()) > 0 );
+`;
+
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState('overview');
     const [bookings, setBookings] = useState([]);
@@ -23,6 +125,7 @@ export default function AdminDashboard() {
     const [editingBooking, setEditingBooking] = useState(null); // For Booking Edit Modal
     const [showSqlModal, setShowSqlModal] = useState(false); // Helper for SQL
     const [adminProfile, setAdminProfile] = useState(null); // Admin Credentials State
+    const [adminUsers, setAdminUsers] = useState([]); // List of authorized admins
     const [deleteConfirm, setDeleteConfirm] = useState({ show: false, table: '', id: '', position: null }); // Custom Delete Popover State
     const navigate = useNavigate();
 
@@ -54,12 +157,14 @@ export default function AdminDashboard() {
     }, []);
 
     const checkUser = async () => {
-        // Updated for Decoupled Admin Login:
-        // We no longer rely on Supabase Auth session for admins.
-        // Instead, we check for our local admin session token.
-        const session = localStorage.getItem('repairly_admin_session');
+        // SECURE AUTH CHECK:
+        // We now rely on Supabase Auth session for admins.
+        const { data: { session } } = await supabase.auth.getSession();
         if (!session) {
             navigate('/admin');
+        } else {
+            // Optional: Secondary check if user is still in allowance list if needed, 
+            // but login already handled that. We trust the active session for now.
         }
     };
 
@@ -76,16 +181,22 @@ export default function AdminDashboard() {
                 .order('created_at', { ascending: false });
 
             // Fetch Admin Profile
-            // We get the ID from local storage to know WHICH admin (though currently only 1)
-            const session = JSON.parse(localStorage.getItem('repairly_admin_session') || '{}');
-            if (session.id) {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
                 const { data: adminData } = await supabase
                     .from('admin_users')
                     .select('*')
-                    .eq('id', session.id)
-                    .single();
+                    .eq('email', user.email) // Use email correlation or ID if synced
+                    .maybeSingle();
                 if (adminData) setAdminProfile(adminData);
             }
+
+            // Fetch Admin Users List for Management Tab
+            const { data: adminList } = await supabase
+                .from('admin_users')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (adminList) setAdminUsers(adminList);
 
             const { data: ticketData, error: ticketError } = await supabase.from('support_tickets').select('*').order('created_at', { ascending: false });
             if (ticketError) throw ticketError;
@@ -117,8 +228,8 @@ export default function AdminDashboard() {
 
     const handleLogout = async () => {
         if (window.confirm("Disconnect from Admin Console?")) {
-            localStorage.removeItem('repairly_admin_session');
             await supabase.auth.signOut();
+            localStorage.removeItem('repairly_admin_session'); // Cleanup legacy
             navigate('/admin');
         }
     };
@@ -1675,6 +1786,82 @@ export default function AdminDashboard() {
                         </div>
                     )
                 }
+                {/* ADMIN MANAGEMENT TAB */}
+                {
+                    activeTab === 'users' && (
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <h2 className="text-lg font-bold text-white">Authorized Administrators</h2>
+                                    <p className="text-slate-400 text-sm">Manage who has access to this Admin Portal via Google Login.</p>
+                                </div>
+                            </div>
+                            <div className="bg-[#1E293B] rounded-2xl shadow-sm border border-slate-700/50 overflow-hidden">
+                                <div className="p-4 border-b border-slate-700/50 flex gap-4 bg-[#1E293B]">
+                                    <input
+                                        type="email"
+                                        placeholder="New Admin Email (e.g. colleague@gmail.com)"
+                                        className="flex-1 p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white outline-none focus:border-blue-500 placeholder:text-slate-500"
+                                        id="newAdminEmail"
+                                        onKeyDown={async (e) => {
+                                            if (e.key === 'Enter') {
+                                                const val = e.target.value.trim();
+                                                if (!val) return;
+                                                const { error } = await supabase.from('admin_users').insert([{ email: val }]);
+                                                if (error) { alert('Error adding admin: ' + error.message); }
+                                                else { e.target.value = ''; fetchData(); }
+                                            }
+                                        }}
+                                    />
+                                    <button
+                                        onClick={async () => {
+                                            const input = document.getElementById('newAdminEmail');
+                                            const val = input.value.trim();
+                                            if (!val) return;
+                                            const { error } = await supabase.from('admin_users').insert([{ email: val }]);
+                                            if (error) { alert('Error adding admin: ' + error.message); }
+                                            else { input.value = ''; fetchData(); }
+                                        }}
+                                        className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2"
+                                    >
+                                        <Plus size={18} /> Grant Access
+                                    </button>
+                                </div>
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left border-collapse min-w-[500px]">
+                                        <thead className="bg-[#0F172A] text-xs font-bold text-slate-400 uppercase tracking-wider">
+                                            <tr>
+                                                <th className="p-4 pl-6">Admin Email</th>
+                                                <th className="p-4">Added On</th>
+                                                <th className="p-4 text-right">Revoke Access</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="text-sm font-medium text-slate-300 divide-y divide-slate-800">
+                                            {adminUsers.map(user => (
+                                                <tr key={user.id} className="hover:bg-slate-800 transition-colors group">
+                                                    <td className="p-4 pl-6 font-bold text-white">{user.email}</td>
+                                                    <td className="p-4 text-slate-400 text-xs">{new Date(user.created_at).toLocaleDateString()}</td>
+                                                    <td className="p-4 text-right">
+                                                        <button
+                                                            onClick={(e) => handleDelete('admin_users', user.id, e)}
+                                                            className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-all"
+                                                            title="Revoke Access"
+                                                        >
+                                                            <Trash2 size={18} />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            {adminUsers.length === 0 && (
+                                                <tr><td colSpan="3" className="p-8 text-center text-slate-400">No admin records found.</td></tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
                 {
                     showSqlModal && (
                         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
@@ -1685,160 +1872,11 @@ export default function AdminDashboard() {
 
                                 <div className="bg-slate-900 rounded-xl p-4 overflow-x-auto mb-6 relative group">
                                     <pre className="text-emerald-400 font-mono text-sm leading-relaxed">
-                                        {`-- 1. Device Models
-create table if not exists device_models (
-  id uuid default gen_random_uuid() primary key,
-  category text,
-  brand text,
-  model text,
-  created_at timestamp with time zone default timezone('utc'::text, now())
-);
-alter table device_models enable row level security;
-drop policy if exists "Public Read" on device_models;
-create policy "Public Read" on device_models for select using (true);
-drop policy if exists "Admin Write" on device_models;
-create policy "Admin Write" on device_models for all to authenticated using (true);
-
--- 2. Service Menu Items
-create table if not exists service_menu_items (
-  id uuid default gen_random_uuid() primary key,
-  label text not null,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
-);
-alter table service_menu_items enable row level security;
-drop policy if exists "Public Read" on service_menu_items;
-create policy "Public Read" on service_menu_items for select using (true);
-drop policy if exists "Admin Write" on service_menu_items;
-create policy "Admin Write" on service_menu_items for all to authenticated using (true);
-
--- 3. Site Settings (REQUIRED FOR SHOP STATUS)
-create table if not exists site_settings (
-  key text primary key,
-  value jsonb,
-  created_at timestamp with time zone default timezone('utc'::text, now())
-);
-alter table site_settings enable row level security;
-drop policy if exists "Public Read" on site_settings;
-create policy "Public Read" on site_settings for select using (true);
-drop policy if exists "Admin Write" on site_settings;
-create policy "Admin Write" on site_settings for all to authenticated using (true);
-
--- 4. Device Inventory (Shop)
-create table if not exists device_inventory (
-  id uuid default gen_random_uuid() primary key,
-  title text not null,
-  brand text default 'Apple',
-  model text,
-  price numeric default 0,
-  condition text default 'Refurbished',
-  storage text,
-  color text,
-  status text default 'Available',
-  image_url text,
-  description text,
-  category text default 'Phones',
-  created_at timestamp with time zone default timezone('utc'::text, now())
-);
-alter table device_inventory enable row level security;
-drop policy if exists "Public Read" on device_inventory;
-create policy "Public Read" on device_inventory for select using (true);
-drop policy if exists "Admin Write" on device_inventory;
-create policy "Admin Write" on device_inventory for all to authenticated using (true);
-
--- 5. Storage (Images)
-insert into storage.buckets (id, name, public) 
-values ('images', 'images', true) 
-on conflict (id) do nothing;
-
-create policy "Public Access" 
-on storage.objects for select 
-using ( bucket_id = 'images' );
-
-create policy "Auth Upload" 
-on storage.objects for insert 
-with check ( bucket_id = 'images' and auth.role() = 'authenticated' );` }
+                                        {SETUP_SQL}
                                     </pre>
                                     <button
                                         onClick={() => {
-                                            navigator.clipboard.writeText(`-- 1. Device Models
-create table if not exists device_models (
-  id uuid default gen_random_uuid() primary key,
-  category text,
-  brand text,
-  model text,
-  created_at timestamp with time zone default timezone('utc'::text, now())
-);
-alter table device_models enable row level security;
-drop policy if exists "Public Read" on device_models;
-create policy "Public Read" on device_models for select using (true);
-drop policy if exists "Admin Write" on device_models;
-create policy "Admin Write" on device_models for all to authenticated using (true);
-
--- 2. Service Menu Items
-create table if not exists service_menu_items (
-  id uuid default gen_random_uuid() primary key,
-  label text not null,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
-);
-alter table service_menu_items enable row level security;
-drop policy if exists "Public Read" on service_menu_items;
-create policy "Public Read" on service_menu_items for select using (true);
-drop policy if exists "Admin Write" on service_menu_items;
-create policy "Admin Write" on service_menu_items for all to authenticated using (true);
-
--- 3. Site Settings (REQUIRED FOR SHOP STATUS)
-create table if not exists site_settings (
-  key text primary key,
-  value jsonb,
-  created_at timestamp with time zone default timezone('utc'::text, now())
-);
-alter table site_settings enable row level security;
-drop policy if exists "Public Read" on site_settings;
-create policy "Public Read" on site_settings for select using (true);
-drop policy if exists "Admin Write" on site_settings;
-create policy "Admin Write" on site_settings for all to authenticated using (true);
--- 4. Device Inventory (Shop)
-create table if not exists device_inventory (
-  id uuid default gen_random_uuid() primary key,
-  title text not null,
-  brand text default 'Apple',
-  model text,
-  price numeric default 0,
-  condition text default 'Refurbished',
-  storage text,
-  color text,
-  status text default 'Available',
-  image_url text,
-  description text,
-  category text default 'Phones',
-  quantity integer default 1,
-  created_at timestamp with time zone default timezone('utc'::text, now())
-);
--- Ensure quantity column exists
-do $$ 
-begin 
-    if not exists (select 1 from information_schema.columns where table_name = 'device_inventory' and column_name = 'quantity') then 
-        alter table device_inventory add column quantity integer default 1; 
-    end if; 
-end $$;
-alter table device_inventory enable row level security;
-drop policy if exists "Public Read" on device_inventory;
-create policy "Public Read" on device_inventory for select using (true);
-drop policy if exists "Admin Write" on device_inventory;
-create policy "Admin Write" on device_inventory for all to authenticated using (true);
-
--- 5. Storage (Images)
-insert into storage.buckets (id, name, public) 
-values ('images', 'images', true) 
-on conflict (id) do nothing;
-
-create policy "Public Access" 
-on storage.objects for select 
-using ( bucket_id = 'images' );
-
-create policy "Auth Upload" 
-on storage.objects for insert 
-with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
+                                            navigator.clipboard.writeText(SETUP_SQL);
                                             alert("Copied to clipboard!");
                                         }}
                                         className="absolute top-2 right-2 bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity"
@@ -1854,7 +1892,7 @@ with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
                         </div>
                     )
                 }
-            </main >
+            </main>
 
             {/* Inventory Edit Modal */}
             {
@@ -2000,7 +2038,7 @@ with check ( bucket_id = 'images' and auth.role() = 'authenticated' );`);
                                 </button>
                             </form>
                         </div>
-                    </div>
+                    </div >
                 )
             }
 

@@ -17,7 +17,7 @@ export default function AuthListener() {
                 const oneDayMs = 24 * 60 * 60 * 1000; // 24 hours
 
                 if (now - lastSignIn > oneDayMs) {
-                    console.log('Session expired (24h limit). Logging out...');
+
                     await supabase.auth.signOut();
                     navigate('/login');
                     return;

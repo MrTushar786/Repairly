@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../supabase';
 import { useNavigate, Link } from 'react-router-dom';
 import { Smartphone, Mail, ArrowRight, CheckCircle, Star } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function ClientLogin() {
     const [loading, setLoading] = useState(false);
@@ -23,14 +23,31 @@ export default function ClientLogin() {
         e.preventDefault();
         setLoading(true);
         try {
+            // 1. Strict Check: Verify email exists in our 'users' table first
+            const { data: userRecord } = await supabase
+                .from('users')
+                .select('id')
+                .eq('email', email)
+                .single();
+
+            if (!userRecord) {
+                // If checking 'users' table returns nothing, we assume they are not registered.
+                // Note: accurate depends on 'users' table being in sync with auth.users
+                throw new Error("No account found. Please create a new account to continue.");
+            }
+
+            // 2. Proceed with Auth
             const { error } = await supabase.auth.signInWithPassword({
                 email,
                 password,
             });
             if (error) throw error;
+            toast.success('Welcome back!');
             navigate('/client/dashboard');
         } catch (error) {
-            alert(error.message);
+            // Handle Supabase "Invalid login credentials" specifically if needed, 
+            // but the pre-check above should catch unregistered emails first.
+            toast.error(error.message);
         } finally {
             setLoading(false);
         }

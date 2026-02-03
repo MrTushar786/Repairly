@@ -3,6 +3,7 @@ import { Mail, Phone, MapPin, MessageSquare, Clock, Send, ChevronDown, ChevronUp
 import { useShop } from '../context/ShopContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
+import { toast } from 'sonner';
 
 export default function Contact() {
     const { shopData } = useShop();
@@ -43,11 +44,11 @@ export default function Contact() {
 
             if (error) throw error;
 
-            alert('Support ticket created! We will respond shortly.');
+            toast.success('Support ticket created! We will respond shortly.');
             setFormState({ name: user?.user_metadata?.full_name || '', email: user?.email || '', subject: 'General Inquiry', message: '' });
         } catch (error) {
             console.error('Error submitting ticket:', error.message, error.details);
-            alert(`Failed to submit ticket: ${error.message}`);
+            toast.error(`Failed to submit ticket: ${error.message}`);
         } finally {
             setIsSubmitting(false);
         }

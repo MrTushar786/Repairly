@@ -4,6 +4,7 @@ import { Calendar, ChevronRight, Smartphone, Check, ArrowLeft, Laptop, Tablet, G
 import { useShop } from '../context/ShopContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabase';
+import { toast } from 'sonner';
 
 const ICON_MAP = {
     Smartphone, Battery, Droplets, Usb, Disc, Wrench, Cpu, Wifi, Camera, Speaker
@@ -354,7 +355,7 @@ export default function BookingWidget() {
 
                                         if (error) {
                                             console.error('Booking Error:', error);
-                                            alert(`Booking Failed: ${error.message} \nDetails: ${error.details || ''}`);
+                                            toast.error(`Booking Failed: ${error.message}`);
                                         } else {
                                             setStep(5);
                                         }

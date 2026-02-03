@@ -18,32 +18,38 @@ import AuthListener from './components/AuthListener';
 import { ShopProvider } from './context/ShopContext';
 import './App.css';
 
+import { Toaster } from 'sonner';
+import ErrorBoundary from './components/ErrorBoundary';
+
 function App() {
   return (
-    <Router>
-      <ShopProvider>
-        <ScrollToTop />
-        <AuthListener />
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="services" element={<Services />} />
-            <Route path="shop" element={<Store />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="about" element={<About />} />
-            <Route path="booking" element={<Booking />} />
-            <Route path="business" element={<Business />} />
-            <Route path="login" element={<ClientLogin />} />
-            <Route path="signup" element={<ClientSignup />} />
-            <Route path="client/dashboard" element={<ClientDashboard />} />
-          </Route>
+    <ErrorBoundary>
+      <Router>
+        <ShopProvider>
+          <ScrollToTop />
+          <Toaster position="top-center" richColors />
+          <AuthListener />
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="services" element={<Services />} />
+              <Route path="shop" element={<Store />} />
+              <Route path="contact" element={<Contact />} />
+              <Route path="about" element={<About />} />
+              <Route path="booking" element={<Booking />} />
+              <Route path="business" element={<Business />} />
+              <Route path="login" element={<ClientLogin />} />
+              <Route path="signup" element={<ClientSignup />} />
+              <Route path="client/dashboard" element={<ClientDashboard />} />
+            </Route>
 
-          {/* Admin Routes - Standalone Layout */}
-          <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<Admin />} />
-        </Routes>
-      </ShopProvider>
-    </Router>
+            {/* Admin Routes - Standalone Layout */}
+            <Route path="/admin" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={<Admin />} />
+          </Routes>
+        </ShopProvider>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

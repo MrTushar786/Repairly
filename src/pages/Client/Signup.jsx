@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { supabase } from '../../supabase';
 import { useNavigate, Link } from 'react-router-dom';
 import { Smartphone, Mail, Lock, User, ArrowRight, CheckCircle, Shield } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function ClientSignup() {
     const [fullName, setFullName] = useState('');
@@ -25,10 +25,10 @@ export default function ClientSignup() {
                 },
             });
             if (error) throw error;
-            alert('Registration Successful! Please check your email to confirm your account.');
+            toast.success('Registration Successful! Please check your email to confirm your account.');
             navigate('/login');
         } catch (error) {
-            alert(error.message);
+            toast.error(error.message);
         } finally {
             setLoading(false);
         }
@@ -41,7 +41,7 @@ export default function ClientSignup() {
                 redirectTo: window.location.origin
             }
         });
-        if (error) alert(error.message);
+        if (error) toast.error(error.message);
     };
 
     return (
