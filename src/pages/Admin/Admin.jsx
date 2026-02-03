@@ -93,19 +93,29 @@ create table if not exists admin_users (
   email text not null unique,
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
+
+-- Fix for legacy table structure (remove password if exists)
+alter table admin_users drop column if exists password;
+
 alter table admin_users enable row level security;
 
--- Allow Authenticated (logged in) users to READ the list 
--- This is required so the Login Page can check if the user is in the allow-list
+-- 1. Read Policy: Allow all authenticated users to read the list
 drop policy if exists "Allow Read Authenticated" on admin_users;
 create policy "Allow Read Authenticated" on admin_users for select to authenticated using (true);
 
--- Allow EXISTING Admins to INSERT/DELETE (Manage the list)
--- Security: Only someone whose email is ALREADY in the table can add/remove others.
-drop policy if exists "Admins Manage Admins" on admin_users;
-create policy "Admins Manage Admins" on admin_users for all to authenticated 
-using ( (select count(*) from admin_users where email = auth.email()) > 0 )
+-- 2. Write Policies: Only existing admins can add/remove others
+drop policy if exists "Admins Manage Admins" on admin_users; -- Cleanup old policy
+
+drop policy if exists "Admins Insert" on admin_users;
+create policy "Admins Insert" on admin_users for insert to authenticated 
 with check ( (select count(*) from admin_users where email = auth.email()) > 0 );
+
+drop policy if exists "Admins Delete" on admin_users;
+create policy "Admins Delete" on admin_users for delete to authenticated 
+using ( (select count(*) from admin_users where email = auth.email()) > 0 );
+
+-- IMPORTANT: You must manually insert the FIRST admin in Supabase SQL Editor:
+-- insert into admin_users (email) values ('tusharahmad3.0@gmail.com');
 `;
 
 export default function AdminDashboard() {
@@ -1391,65 +1401,7 @@ export default function AdminDashboard() {
                     )
                 }
                 {/* Users Tab */}
-                {
-                    activeTab === 'users' && (
-                        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
-                            {/* Admin Account Management Section */}
-                            {adminProfile && (
-                                <div className="bg-[#1E293B] rounded-2xl shadow-sm border border-slate-700/50 p-6">
-                                    <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                                        <div className="p-2 bg-red-500/20 rounded-lg text-red-400">
-                                            <Lock size={20} />
-                                        </div>
-                                        My Admin Credentials
-                                    </h3>
-                                    <div className="p-4 bg-slate-900/50 rounded-xl border border-slate-700/50 mb-6">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                            <div>
-                                                <p className="text-slate-500 uppercase font-bold text-xs mb-1">Current Email</p>
-                                                <p className="text-white font-mono">{adminProfile.email}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-slate-500 uppercase font-bold text-xs mb-1">Current Password</p>
-                                                <p className="text-white font-mono">{adminProfile.password} <span className="text-slate-500 text-xs italic ml-2">(Plain text as requested)</span></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <form onSubmit={handleAdminUpdate} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                                        <div>
-                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">New Email</label>
-                                            <input
-                                                name="email"
-                                                type="email"
-                                                defaultValue={adminProfile.email}
-                                                required
-                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white focus:border-red-500 outline-none"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="text-xs font-bold text-slate-400 uppercase mb-1 block">New Password</label>
-                                            <input
-                                                name="password"
-                                                type="text"
-                                                defaultValue={adminProfile.password}
-                                                required
-                                                className="w-full p-3 bg-[#0F172A] border border-slate-700/50 rounded-xl font-bold text-white focus:border-red-500 outline-none"
-                                            />
-                                        </div>
-                                        <button
-                                            type="submit"
-                                            className="w-full p-3 bg-red-600 text-white font-bold rounded-xl hover:bg-red-700 transition-colors"
-                                        >
-                                            Update Credentials
-                                        </button>
-                                    </form>
-                                </div>
-                            )}
 
-
-                        </div>
-                    )
-                }
                 {/* Site Settings Tab */}
                 {
                     activeTab === 'settings' && (
